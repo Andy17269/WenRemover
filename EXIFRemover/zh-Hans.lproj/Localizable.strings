@@ -1,0 +1,30 @@
+"app.title" = "WenRemover";
+"app.subtitle" = "拖拽图片到下方区域，选择输出目录，点击“移除EXIF”即可批量移除所有图片隐私信息。";
+"tutorial.link" = "查看使用教程/帮助";
+"help.about" = "关于";
+"menu.help" = "帮助";
+
+"button.addFiles" = "添加文件";
+"button.chooseOutput" = "选择输出目录";
+"button.removeExif" = "移除 EXIF";
+"button.removing" = "正在移除…";
+"button.clearList" = "清空列表";
+"button.clearAll" = "清空全部";
+"button.removeOne" = "删除";
+
+"output.none" = "未选择";
+
+"dropzone.title" = "拖拽图片到此处";
+"dropzone.subtitle" = "支持 JPG / PNG / HEIC / TIFF 的图像文件";
+
+"selected.count" = "已选择：%d";
+
+"status.noneSupported" = "未识别到可处理的图片。";
+"status.added" = "已添加 %d 张图片。";
+"status.processing" = "处理中…";
+"status.done" = "完成：成功 %d 张，失败 %d 张。";
+
+"info.title" = "WenRemover";
+"info.subtitle" = "移除图片 EXIF 信息以保护隐私。";
+"info.supported" = "支持格式：JPG / PNG / HEIC / TIFF";
+"info.outputRule" = "输出规则：原文件名 + _clean";
