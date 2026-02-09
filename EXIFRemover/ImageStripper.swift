@@ -3,6 +3,29 @@ import ImageIO
 import UniformTypeIdentifiers
 import CoreGraphics
 
+struct OutputConfiguration: Equatable {
+    var suffix: String
+    var rule: OutputConflictRule
+
+    static let `default` = OutputConfiguration(suffix: "_clean", rule: .appendIndex)
+
+    var sanitizedSuffix: String {
+        suffix.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    func normalized() -> OutputConfiguration {
+        OutputConfiguration(suffix: sanitizedSuffix, rule: rule)
+    }
+}
+
+enum OutputConflictRule: String, CaseIterable, Identifiable {
+    case appendIndex
+    case overwrite
+    case skip
+
+    var id: String { rawValue }
+}
+
 enum ImageStripper {
     static func isSupportedImage(url: URL) -> Bool {
         let ext = url.pathExtension
@@ -10,12 +33,57 @@ enum ImageStripper {
         return type.conforms(to: .image)
     }
 
-    static func stripMetadata(inputURL: URL, outputFolder: URL) throws -> URL {
+    static func stripMetadata(
+        inputURL: URL,
+        outputFolder: URL,
+        configuration: OutputConfiguration = .default
+    ) throws -> URL {
         let fileManager = FileManager.default
         let ext = inputURL.pathExtension.isEmpty ? "jpg" : inputURL.pathExtension
         let baseName = inputURL.deletingPathExtension().lastPathComponent
-        let outputName = "\(baseName)_clean.\(ext)"
-        let outputURL = outputFolder.appendingPathComponent(outputName)
+        let suffix = configuration.sanitizedSuffix
+
+        func makeCandidateName(index: Int?) -> String {
+            var name = baseName
+            if !suffix.isEmpty {
+                name += suffix
+            }
+            if let index {
+                name += "_\(index)"
+            }
+            return name
+        }
+
+        func candidateURL(index: Int?) -> URL {
+            outputFolder.appendingPathComponent(makeCandidateName(index: index)).appendingPathExtension(ext)
+        }
+
+        let outputURL: URL
+
+        switch configuration.rule {
+        case .appendIndex:
+            var index: Int? = nil
+            var candidate = candidateURL(index: index)
+            var counter = 1
+            while fileManager.fileExists(atPath: candidate.path) {
+                index = counter
+                candidate = candidateURL(index: index)
+                counter += 1
+            }
+            outputURL = candidate
+        case .overwrite:
+            let candidate = candidateURL(index: nil)
+            if fileManager.fileExists(atPath: candidate.path) {
+                try? fileManager.removeItem(at: candidate)
+            }
+            outputURL = candidate
+        case .skip:
+            let candidate = candidateURL(index: nil)
+            guard !fileManager.fileExists(atPath: candidate.path) else {
+                throw StripError.skippedByRule
+            }
+            outputURL = candidate
+        }
 
         guard let source = CGImageSourceCreateWithURL(inputURL as CFURL, nil) else {
             throw StripError.invalidImage
@@ -50,6 +118,7 @@ enum ImageStripper {
         case invalidImage
         case cannotCreateDestination
         case cannotWrite
+        case skippedByRule
 
         var errorDescription: String? {
             switch self {
@@ -59,6 +128,8 @@ enum ImageStripper {
                 return "无法创建输出文件。"
             case .cannotWrite:
                 return "写入失败。"
+            case .skippedByRule:
+                return "已存在同名文件，且规则设置为跳过。"
             }
         }
     }

@@ -11,6 +11,9 @@ struct EXIFRemoverApp: App {
         }
         .windowStyle(.titleBar)
         .windowToolbarStyle(.unified)
+        Settings {
+            SettingsView()
+        }
         .commands {
             CommandGroup(replacing: .help) {
                 Button(LocalizedStringKey("menu.help")) {

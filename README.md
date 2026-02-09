@@ -19,4 +19,4 @@ A SwiftUI macOS utility for batch-removing EXIF metadata from images.
 - Click “Choose Output Folder”
 - Click “Remove EXIF”
 
-Output files are saved to the selected folder with a “_clean” suffix.
+Output files are saved to the selected folder with your custom suffix (default `_clean`).

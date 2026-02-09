@@ -5,12 +5,17 @@
 "menu.help" = "帮助";
 
 "button.addFiles" = "添加文件";
+"menu.addFromFinder" = "从“访达”添加";
+"button.addFromPhotos" = "从“照片”添加";
 "button.chooseOutput" = "选择输出目录";
 "button.removeExif" = "移除 EXIF";
 "button.removing" = "正在移除…";
 "button.clearList" = "清空列表";
 "button.clearAll" = "清空全部";
 "button.removeOne" = "删除";
+"button.outputSettings" = "输出设置";
+"button.cancel" = "取消";
+"button.saveChanges" = "保存";
 
 "output.none" = "未选择";
 
@@ -23,8 +28,40 @@
 "status.added" = "已添加 %d 张图片。";
 "status.processing" = "处理中…";
 "status.done" = "完成：成功 %d 张，失败 %d 张。";
+"status.doneDetailed" = "完成：成功 %d 张，失败 %d 张，跳过 %d 张。";
 
 "info.title" = "WenRemover";
 "info.subtitle" = "移除图片 EXIF 信息以保护隐私。";
 "info.supported" = "支持格式：JPG / PNG / HEIC / TIFF";
-"info.outputRule" = "输出规则：原文件名 + _clean";
+"info.outputRule" = "输出规则：原文件名 + 自定义后缀（默认 _clean）";
+
+"help.outputSettings" = "自定义输出后缀与规则";
+"output.settingsTitle" = "输出设置";
+"output.settingsDescription" = "选择处理时的文件命名方式。";
+"output.suffixLabel" = "文件名后缀";
+"output.suffixPlaceholder" = "示例：_clean";
+"output.ruleLabel" = "当遇到同名文件时";
+"output.rule.appendIndex" = "自动追加序号";
+"output.rule.appendIndex.desc" = "在文件名后追加 _1、_2… 以避免冲突";
+"output.rule.overwrite" = "覆盖已有文件";
+"output.rule.overwrite.desc" = "删除同名文件并写入新的输出";
+"output.rule.skip" = "跳过已有文件";
+"output.rule.skip.desc" = "保留原文件并将任务记为“已跳过”";
+
+"changelog.title" = "v1.202.6(2)更新";
+"changelog.body" = "• 新增输出设置功能，可自定义输出后缀与文件名冲突时的规则。\n• 新增“从‘照片’添加“功能”。\n• 修复部分 HEIC 图片处理问题。";
+"changelog.dismiss" = "关闭";
+
+"notice.defaultTitle" = "公告";
+"notice.dismiss" = "关闭";
+"notice.action" = "查看详情";
+// Settings
+"settings.network.section" = "联网";
+"settings.notice.disable" = "关闭通知";
+"settings.notice.disable.note" = "关闭后将不再显示公告/特别通知。";
+"settings.dev.section" = "开发者选项";
+"settings.dev.alwaysShowChangelog" = "始终显示更新日志";
+"settings.dev.alwaysShowChangelog.note" = "开启后都将持续显示更新日志。";
+"settings.output.section" = "输出设置";
+"settings.output.reset" = "恢复默认输出设置。若要自定义输出设置，请前往首页「输出设置」。";
+"settings.output.reset.note" = "恢复默认的输出设置。";

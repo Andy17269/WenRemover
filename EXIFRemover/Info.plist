@@ -18,6 +18,8 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Need access to import images from Photos.</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2026 AndyWen</string>
 	<key>NSMainStoryboardFile</key>
