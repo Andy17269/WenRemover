@@ -2,6 +2,8 @@
 
 一个基于 SwiftUI 的 macOS 小工具，用于批量移除图片 EXIF 信息。
 
+<img width="1470" height="956" alt="app-screenshot" src="https://github.com/user-attachments/assets/bb80a797-e487-4718-a80d-a039394d2ab9" />
+
 ## 功能
 - 拖拽图片到应用窗口，支持从“照片”App中选择；
 - 选择输出目录和规则；
