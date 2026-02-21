@@ -3,6 +3,7 @@
 English | [简体中文](README.zh-CN.md)
 
 A SwiftUI-based macOS gadget for batch removal of picture EXIF information.
+
 <img width="1470" height="956" alt="app-screenshot" src="https://github.com/user-attachments/assets/bb80a797-e487-4718-a80d-a039394d2ab9" />
 
 ## Function
