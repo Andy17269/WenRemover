@@ -1,9 +1,19 @@
+/* 2026@AndyWen.
+ ____    _____      _       ____   _   _     _____   _   _   _____     _____   ___   _   _      _      _       ____
+|  _ \  | ____|    / \     / ___| | | | |   |_   _| | | | | | ____|   |  ___| |_ _| | \ | |    / \    | |     / ___|
+| |_) | |  _|     / _ \   | |     | |_| |     | |   | |_| | |  _|     | |_     | |  |  \| |   / _ \   | |     \___ \
+|  _ <  | |___   / ___ \  | |___  |  _  |     | |   |  _  | | |___    |  _|    | |  | |\  |  / ___ \  | |___   ___) |
+|_| \_\ |_____| /_/   \_\  \____| |_| |_|     |_|   |_| |_| |_____|   |_|     |___| |_| \_| /_/   \_\ |_____| |____/
+LOVE WITH CNS.
+Sealed on February 21, 2026, Version 1.202.7.
+ */
+/* 首页头部 */
 "app.title" = "WenRemover";
 "app.subtitle" = "拖拽图片到下方区域，选择输出目录，点击“移除EXIF”即可批量移除所有图片隐私信息。";
 "tutorial.link" = "查看使用教程/帮助";
 "help.about" = "关于";
 "menu.help" = "帮助";
-
+/* 首页按钮 */
 "button.addFiles" = "添加文件";
 "menu.addFromFinder" = "从「访达」添加";
 "button.addFromPhotos" = "从「照片」添加";
@@ -16,25 +26,23 @@
 "button.outputSettings" = "输出设置";
 "button.cancel" = "取消";
 "button.saveChanges" = "保存";
-
+/* Tips */
 "output.none" = "未选择";
-
 "dropzone.title" = "拖拽图片到此处";
 "dropzone.subtitle" = "支持 JPG / PNG / HEIC / TIFF 的图像文件";
-
+/* 状态 */
 "selected.count %lld" = "已选择：%lld";
-
 "status.noneSupported" = "未识别到可处理的图片。";
 "status.added %lld" = "已添加 %lld 张图片。";
 "status.processing" = "处理中…";
 "status.done %lld %lld" = "完成：成功 %lld 张，失败 %lld 张。";
 "status.doneDetailed %lld %lld %lld" = "完成：成功 %lld 张，失败 %lld 张，跳过 %lld 张。";
-
+/* 小info */
 "info.title" = "WenRemover";
 "info.subtitle" = "移除图片 EXIF 信息以保护隐私。";
 "info.supported" = "支持格式：JPG / PNG / HEIC / TIFF";
 "info.outputRule" = "输出规则：原文件名 + 自定义后缀（默认 _clean）";
-
+/* 输出设置 */
 "help.outputSettings" = "自定义输出后缀与规则";
 "output.settingsTitle" = "输出设置";
 "output.settingsDescription" = "选择处理时的文件命名方式。";
@@ -47,21 +55,21 @@
 "output.rule.overwrite.desc" = "删除同名文件并写入新的输出";
 "output.rule.skip" = "跳过已有文件";
 "output.rule.skip.desc" = "保留原文件并将任务记为“已跳过”";
-
-"changelog.title" = "v1.202.7 更新";
-"changelog.body" = "• 首页全新毛玻璃背景和UI。\n• 优化图片拖拽添加逻辑，新增提示动画。\n• 更新未选择目录时的提醒红点。\n• 添加英语支持，可于「设置-语言」中手动切换或跟随系统语言。";
+/* 更新Log&通知 */
+"changelog.title" = "v1.202.7 更新 🎉";
+"changelog.body" = "• 全新毛玻璃背景和圆角UI（BETA 版）。\n• 优化图片拖拽添加逻辑，新增提示动画。\n• 改进未选择目录时的提醒，输出目录现仅显示目录名。\n• 多语言支持，可于「设置-语言」中手动切换或跟随系统语言。\n• 新增错误序号，可于帮助页寻找解决方案。";
 "changelog.dismiss" = "关闭";
-
 "notice.defaultTitle" = "公告";
 "notice.dismiss" = "关闭";
 "notice.action" = "查看详情";
-// Settings
+/* 设置页 */
 "settings.network.section" = "联网";
 "settings.notice.disable" = "关闭通知";
 "settings.notice.disable.note" = "关闭后将不再显示公告/特别通知。";
-"settings.dev.section" = "开发者选项";
+"settings.dev.section" = "开发";
+"settings.dev.options" = "选项";
 "settings.dev.alwaysShowChangelog" = "始终显示更新日志";
-"settings.dev.alwaysShowChangelog.note" = "开启后都将持续显示更新日志。";
+"settings.dev.alwaysShowChangelog.note" = "开启后将持续显示更新日志。";
 "settings.output.section" = "输出设置";
 "settings.output.reset" = "恢复默认输出设置";
 "settings.output.reset.note" = "恢复默认的输出设置。若要自定义输出设置，请前往首页「输出设置」。";
@@ -72,21 +80,21 @@
 "appearance.dark" = "深色";
 "appearance.system" = "跟随系统";
 "appearance.theme" = "外观设置";
-
 "settings.language.section" = "语言";
 "settings.language.label" = "应用语言";
 "settings.language.system" = "跟随系统";
 "settings.language.english" = "English";
 "settings.language.chinese" = "简体中文";
-
+/* 设置-语言下的文案 */
+"settings.language.helper.text" = "帮我们改进文档和翻译。";
+"settings.language.helper.linkText" = "了解更多";
+"settings.language.helper.url" = "https://wenlei.top/wenremover-feedback";
 "settings.window.title" = "WenRemover 设置";
-
-// Panel prompts
+/* 系统API */
 "panel.choose" = "选择";
 "panel.add" = "添加";
-
-// ImageStripper errors
+/* 错误信息 */
 "error.invalidImage" = "无法读取图片。";
-"error.cannotCreateDestination" = "无法创建输出文件。";
+"error.cannotCreateDestination" = "无法创建输出文件。（错误1）";
 "error.cannotWrite" = "写入失败。";
 "error.skippedByRule" = "已存在同名文件，且规则设置为跳过。";

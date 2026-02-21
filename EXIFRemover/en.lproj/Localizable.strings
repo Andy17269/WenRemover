@@ -1,6 +1,7 @@
+/* Application strings (English) */
 "app.title" = "WenRemover";
-"app.subtitle" = "Drag images into the area below, choose an output folder, then click \"Remove EXIF\" to batch remove private metadata from images.";
-"tutorial.link" = "View tutorial / Help";
+"app.subtitle" = "Drag images below, select an output folder, and click \"Remove EXIF\" to batch remove all metadata.";
+"tutorial.link" = "View tutorial / Help (Simplified Chinese)";
 "help.about" = "About";
 "menu.help" = "Help";
 
@@ -56,10 +57,12 @@
 "notice.dismiss" = "Dismiss";
 "notice.action" = "View details";
 
+/* Developer Settings */
 "settings.network.section" = "Network";
 "settings.notice.disable" = "Disable notices";
 "settings.notice.disable.note" = "When turned off, announcements and special notices will no longer be shown.";
-"settings.dev.section" = "Developer Options";
+"settings.dev.section" = "Develop";
+"settings.dev.options" = "Options";
 "settings.dev.alwaysShowChangelog" = "Always show changelog";
 "settings.dev.alwaysShowChangelog.note" = "When enabled, the changelog will remain visible.";
 "settings.output.section" = "Output Settings";
@@ -79,13 +82,18 @@
 "settings.language.english" = "English";
 "settings.language.chinese" = "Simplified Chinese";
 
+/* Placeholder helper for language row (editable later) */
+"settings.language.helper.text" = "Help us improve documentation and translations.";
+"settings.language.helper.linkText" = "Learn more";
+"settings.language.helper.url" = "https://wenlei.top/wenremover-feedback";
+
 "settings.window.title" = "WenRemover Settings";
 
-// Panel prompts
+/* Panel prompts */
 "panel.choose" = "Choose";
 "panel.add" = "Add";
 
-// ImageStripper errors
+/* ImageStripper errors */
 "error.invalidImage" = "Unable to read image.";
 "error.cannotCreateDestination" = "Cannot create output file.";
 "error.cannotWrite" = "Write failed.";

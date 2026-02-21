@@ -826,18 +826,31 @@ private struct NoticeBanner: Equatable {
 }
 
 private struct AppInfoView: View {
+    @AppStorage("languagePreference") private var languagePreference: String = "system"
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(LocalizedStringKey("info.title"))
+            Text(localizedString("info.title"))
                 .font(.headline)
-            Text(LocalizedStringKey("info.subtitle"))
+            Text(localizedString("info.subtitle"))
                 .foregroundStyle(.secondary)
             Divider()
-            Text(LocalizedStringKey("info.supported"))
+            Text(localizedString("info.supported"))
                 .font(.callout)
-            Text(LocalizedStringKey("info.outputRule"))
+            Text(localizedString("info.outputRule"))
                 .font(.callout)
         }
+    }
+
+    private func localizedString(_ key: String) -> String {
+        if languagePreference == "system" {
+            return NSLocalizedString(key, comment: "")
+        }
+        if let path = Bundle.main.path(forResource: languagePreference, ofType: "lproj"),
+           let langBundle = Bundle(path: path) {
+            return langBundle.localizedString(forKey: key, value: nil, table: nil)
+        }
+        return NSLocalizedString(key, comment: "")
     }
 }
 
@@ -923,6 +936,7 @@ private struct OutputSettingsView: View {
             }
             .padding(24)
             .frame(minWidth: 360)
+            .background(FullscreenDisabler())
         }
     }
 

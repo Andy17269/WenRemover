@@ -35,6 +35,26 @@ struct SettingsView: View {
                         } label: {
                             Text(LocalizedStringKey("settings.language.label"))
                         }
+
+                        // Placeholder helper: localized text + tappable link
+                        HStack(spacing: 6) {
+                            Text(LocalizedStringKey("settings.language.helper.text"))
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+
+                            Button(action: {
+                                let urlString = localizedString("settings.language.helper.url")
+                                if let url = URL(string: urlString) {
+                                    NSWorkspace.shared.open(url)
+                                }
+                            }) {
+                                Text(LocalizedStringKey("settings.language.helper.linkText"))
+                                    .font(.subheadline)
+                                    .foregroundColor(.accentColor)
+                                    .underline()
+                            }
+                            .buttonStyle(.plain)
+                        }
                     }
 
                     // Section: Output
@@ -124,6 +144,8 @@ struct SettingsView: View {
             }
         }
         .frame(width: 480)
+        .frame(minHeight: 540)
+        .background(SettingsFullscreenDisabler())
         .onAppear {
             updateWindowTitle()
         }
@@ -185,6 +207,24 @@ struct SettingsView: View {
             }
         }
     }
+}
+
+// Keep settings window translucent and disable full screen (match main view behavior)
+fileprivate struct SettingsFullscreenDisabler: NSViewRepresentable {
+    func makeNSView(context: Context) -> NSView {
+        let view = NSView()
+        DispatchQueue.main.async {
+            if let window = view.window {
+                window.collectionBehavior.insert(.fullScreenNone)
+                window.collectionBehavior.remove(.fullScreenPrimary)
+                window.isOpaque = false
+                window.backgroundColor = .clear
+            }
+        }
+        return view
+    }
+
+    func updateNSView(_ nsView: NSView, context: Context) {}
 }
 
 #Preview {
