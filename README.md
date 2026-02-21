@@ -6,11 +6,13 @@ A SwiftUI-based macOS gadget for batch removal of picture EXIF information.
 
 ## Function
 
-- Drag the picture to the application window;
+- Drag the picture to the application window, and support selection from the "Photos" App;
 
 - Select the output directory and rules;
 
 - One-click batch removal of EXIF;
+
+- Liquid Glass design;
 
 ## Run
 
