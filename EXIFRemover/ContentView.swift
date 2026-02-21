@@ -5,6 +5,7 @@ import CryptoKit
 @MainActor
 struct ContentView: View {
     @State private var isTargeted = false
+    @State private var isHoveringDropZone = false
     @State private var imageURLs: [URL] = []
     @State private var outputFolder: URL?
     @State private var statusMessage: String?
@@ -14,6 +15,7 @@ struct ContentView: View {
     @State private var tempPhotoURLs: Set<URL> = []
     @State private var isPhotoPickerPresented = false
     @State private var showOutputSettings = false
+    @State private var showSuccessCheck = false // New state for success animation
     @State private var showChangelogBanner = false
     @State private var noticeBanner: NoticeBanner?
     @State private var showNoticeBanner = false
@@ -24,6 +26,7 @@ struct ContentView: View {
     @AppStorage("disableOnlineNotice") private var disableOnlineNotice = false
     @AppStorage("noticeBannerDismissedAt") private var noticeBannerDismissedAt = 0.0
     @AppStorage("noticeBannerDismissedID") private var noticeBannerDismissedID = ""
+    @AppStorage("languagePreference") private var languagePreference: String = "system"
     private let tutorialURL = URL(string: "https://wenlei.top/wenremover-docs-v1/#header-id-2")!
     private let noticeBannerURL = URL(string: "https://assets.wenlei.top/wenremover/index-notice.config")!
 
@@ -34,91 +37,69 @@ struct ContentView: View {
         )
     }
 
+    private var minWindowWidth: CGFloat {
+        if languagePreference == "en" { return 685 }
+        if languagePreference == "zh-Hans" { return 580 }
+        // System fallback
+        let lang = Locale.current.language.languageCode?.identifier ?? "en"
+        return lang.contains("zh") ? 580 : 685
+    }
+
     var body: some View {
         VStack(spacing: 16) {
-            if showNoticeBanner, let noticeBanner {
-                noticeBannerView(noticeBanner)
-            }
-            if showChangelogBanner || alwaysShowChangelogBanner {
-                changelogBanner
-            }
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("app.title")
-                        .font(.title2)
-                    Text("app.subtitle")
-                        .foregroundStyle(.secondary)
-                    Link(LocalizedStringKey("tutorial.link"), destination: tutorialURL)
-                        .font(.callout)
+            // Header and Banners grouped with less spacing
+            VStack(alignment: .leading, spacing: 10) {
+                // Header: large title + subtitle + tutorial link; info button at top-right
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        // Large, bold title for macOS modern feel
+                        Text(LocalizedStringKey("app.title"))
+                            .font(.largeTitle)
+                            .bold()
+
+                        // Description under the title with lower emphasis
+                        Text(LocalizedStringKey("app.subtitle"))
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+
+                        // Tutorial / help link kept as-is
+                        Link(LocalizedStringKey("tutorial.link"), destination: tutorialURL)
+                            .font(.callout)
+                            .foregroundColor(.accentColor)
+                    }
+
+                    Spacer()
+
+                    // Info button stays at top-right; aligned with the header top
+                    Button {
+                        showInfo = true
+                    } label: {
+                        Image(systemName: "info.circle")
+                            .font(.title2)
+                    }
+                    .buttonStyle(.borderless)
+                    .help(LocalizedStringKey("help.about"))
+                    .popover(isPresented: $showInfo, arrowEdge: .top) {
+                        AppInfoView()
+                            .padding(16)
+                            .frame(width: 300)
+                    }
                 }
-                Spacer()
-                Button {
-                    showInfo = true
-                } label: {
-                    Image(systemName: "info.circle")
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.top, 28)
+
+                if showNoticeBanner, let noticeBanner {
+                    noticeBannerView(noticeBanner)
                 }
-                .buttonStyle(.borderless)
-                .help(LocalizedStringKey("help.about"))
-                .popover(isPresented: $showInfo, arrowEdge: .top) {
-                    AppInfoView()
-                        .padding(16)
-                        .frame(width: 300)
+                if showChangelogBanner || alwaysShowChangelogBanner {
+                    changelogBanner
                 }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
 
             dropZone
 
-            HStack(spacing: 12) {
-                Menu {
-                    Button {
-                        chooseInputFiles()
-                    } label: {
-                        Label(LocalizedStringKey("menu.addFromFinder"), systemImage: "folder.badge.plus")
-                    }
-                    Button {
-                        isPhotoPickerPresented = true
-                    } label: {
-                        Label(LocalizedStringKey("button.addFromPhotos"), systemImage: "photo.on.rectangle")
-                    }
-                    .disabled(isProcessing)
-                } label: {
-                    Label(LocalizedStringKey("button.addFiles"), systemImage: "plus.circle")
-                }
-                .menuStyle(.borderlessButton)
-                .disabled(isProcessing)
-
-                Button {
-                    chooseOutputFolder()
-                } label: {
-                    Label(LocalizedStringKey("button.chooseOutput"), systemImage: "folder")
-                }
-                HStack(spacing: 6) {
-                    if outputFolder == nil {
-                        Image(systemName: "exclamationmark.triangle.fill")
-                            .foregroundStyle(.red)
-                    }
-                    Text(outputFolder?.path ?? NSLocalizedString("output.none", comment: ""))
-                        .foregroundStyle(outputFolder == nil ? .red : .primary)
-                        .fontWeight(outputFolder == nil ? .semibold : .regular)
-                        .lineLimit(1)
-                        .truncationMode(.middle)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                Button {
-                    showOutputSettings = true
-                } label: {
-                    Label(LocalizedStringKey("button.outputSettings"), systemImage: "slider.horizontal.3")
-                }
-                .help(LocalizedStringKey("help.outputSettings"))
-                .disabled(isProcessing)
-                Button {
-                    processImages()
-                } label: {
-                    Label(isProcessing ? LocalizedStringKey("button.removing") : LocalizedStringKey("button.removeExif"), systemImage: "wand.and.stars")
-                }
-                .disabled(imageURLs.isEmpty || outputFolder == nil || isProcessing)
-            }
+            controlBar
 
             if let statusMessage {
                 Text(statusMessage)
@@ -130,8 +111,10 @@ struct ContentView: View {
             fileList
         }
         .padding(20)
-        .frame(minWidth: 680, idealWidth: 760, minHeight: 640, idealHeight: 720)
+        .frame(minWidth: minWindowWidth, idealWidth: minWindowWidth, minHeight: 640, idealHeight: 720)
+        .background(.regularMaterial)
         .background(FullscreenDisabler())
+        .ignoresSafeArea()
         .onAppear {
             if !hasSeenChangelogBanner {
                 showChangelogBanner = true
@@ -145,7 +128,7 @@ struct ContentView: View {
             }
         }
         .photosPicker(isPresented: $isPhotoPickerPresented, selection: $photoPickerItems, matching: .images)
-        .onChange(of: photoPickerItems) { newItems in
+        .onChange(of: photoPickerItems) { _ , newItems in
             handlePhotoSelection(items: newItems)
         }
         .sheet(isPresented: $showOutputSettings) {
@@ -157,31 +140,190 @@ struct ContentView: View {
         }
     }
 
+    private var controlBar: some View {
+        HStack(spacing: 16) {
+            // Group 1: Left - Input
+            // 1. Add Files Menu (Consolidated)
+            Menu {
+                Button {
+                    chooseInputFiles()
+                } label: {
+                    Label(LocalizedStringKey("menu.addFromFinder"), systemImage: "folder.badge.plus")
+                }
+                Button {
+                    isPhotoPickerPresented = true
+                } label: {
+                    Label(LocalizedStringKey("button.addFromPhotos"), systemImage: "photo.on.rectangle")
+                }
+                .disabled(isProcessing)
+            } label: {
+                Label {
+                    Text(LocalizedStringKey("button.addFiles"))
+                } icon: {
+                    Image(systemName: "plus")
+                        .symbolRenderingMode(.hierarchical)
+                }
+                .frame(height: 38)
+                .padding(.horizontal, 16)
+                .background(Color.secondary.opacity(0.1))
+                .clipShape(Capsule())
+                .overlay(
+                    Capsule()
+                        .stroke(Color.secondary.opacity(0.2), lineWidth: 0.5)
+                )
+            }
+            .menuStyle(.borderlessButton)
+            .menuIndicator(.hidden)
+            .fixedSize()
+            .help(LocalizedStringKey("button.addFiles"))
+            .disabled(isProcessing)
+
+            Spacer()
+
+            // Group 2: Right - Settings, Output & Action
+            HStack(spacing: 12) {
+                // 2. Settings Button
+                Button {
+                    showOutputSettings = true
+                } label: {
+                    Label {
+                        Text(LocalizedStringKey("button.outputSettings"))
+                    } icon: {
+                        Image(systemName: "slider.horizontal.3")
+                            .symbolRenderingMode(.hierarchical)
+                    }
+                    .frame(height: 38)
+                    .padding(.horizontal, 16)
+                    .background(Color.secondary.opacity(0.1))
+                    .clipShape(Capsule())
+                    .overlay(
+                        Capsule()
+                            .stroke(Color.secondary.opacity(0.2), lineWidth: 0.5)
+                    )
+                }
+                .buttonStyle(.plain)
+                .fixedSize()
+                .help(LocalizedStringKey("help.outputSettings"))
+                .disabled(isProcessing)
+
+                // 3. Choose Output Folder Button
+                Button {
+                    chooseOutputFolder()
+                } label: {
+                    Label {
+                        Text(outputFolder?.lastPathComponent ?? localizedString("button.chooseOutput"))
+                            .lineLimit(1)
+                            .truncationMode(.middle)
+                    } icon: {
+                        Image(systemName: "folder")
+                            .symbolRenderingMode(.hierarchical)
+                    }
+                    .frame(height: 38)
+                    .padding(.horizontal, 16)
+                    .background(Color.secondary.opacity(0.1))
+                    .clipShape(Capsule())
+                    .overlay(
+                        Capsule()
+                            .stroke(Color.secondary.opacity(0.2), lineWidth: 0.5)
+                    )
+                }
+                .buttonStyle(.plain)
+                .fixedSize()
+                .overlay(alignment: .topTrailing) {
+                    if outputFolder == nil {
+                        Circle()
+                            .fill(Color.red)
+                            .frame(width: 10, height: 10)
+                            .overlay(Circle().stroke(Color.white, lineWidth: 1))
+                            .offset(x: 4, y: -4)
+                    }
+                }
+                .help(LocalizedStringKey("button.chooseOutput"))
+
+                // 4. Remove EXIF Button (Primary Capsule)
+                Button {
+                    processImages()
+                } label: {
+                    ZStack {
+                        // Original Label (Hidden when processing or showing success)
+                        Label {
+                            Text(LocalizedStringKey("button.removeExif"))
+                                .fontWeight(.bold)
+                        } icon: {
+                            Image(systemName: "wand.and.stars")
+                                .symbolRenderingMode(.hierarchical)
+                        }
+                        .opacity((isProcessing || showSuccessCheck) ? 0 : 1)
+                        
+                        // Progress View
+                        if isProcessing {
+                            ProgressView()
+                                .controlSize(.small)
+                                .tint(.white)
+                        }
+                        
+                        // Success Checkmark
+                        if showSuccessCheck {
+                            Image(systemName: "checkmark")
+                                .font(.system(size: 18, weight: .bold))
+                                .foregroundStyle(.white)
+                                .transition(.scale.combined(with: .opacity))
+                        }
+                    }
+                    .frame(height: 38)
+                    .padding(.horizontal, 24) // Maintain padding to keep width stable if possible, or adequate for content
+                    .frame(minWidth: 140) // Ensure button doesn't shrink too much during state changes
+                    .background(showSuccessCheck ? Color.green : Color.accentColor) // Green background on success
+                    .foregroundStyle(.white)
+                    .clipShape(Capsule())
+                    .animation(.easeInOut(duration: 0.2), value: isProcessing)
+                    .animation(.easeInOut(duration: 0.2), value: showSuccessCheck)
+                }
+                .buttonStyle(.plain)
+                .disabled(imageURLs.isEmpty || outputFolder == nil || isProcessing)
+                .opacity((imageURLs.isEmpty || outputFolder == nil || isProcessing) && !showSuccessCheck ? 0.5 : 1)
+            }
+        }
+        .padding(.top, 12)
+    }
+
     private var dropZone: some View {
         RoundedRectangle(cornerRadius: 12)
-            .fill(isTargeted ? Color.accentColor.opacity(0.15) : Color.secondary.opacity(0.08))
+            .fill(isTargeted || isHoveringDropZone ? Color.accentColor.opacity(0.15) : Color.secondary.opacity(0.05))
             .overlay(
-                VStack(spacing: 8) {
-                    Image(systemName: "photo.on.rectangle.angled")
-                        .font(.system(size: 32))
-                    Text("dropzone.title")
-                        .font(.headline)
-                    Text("dropzone.subtitle")
-                        .foregroundStyle(.secondary)
+                ZStack {
+                    RoundedRectangle(cornerRadius: 12)
+                        .strokeBorder(style: StrokeStyle(lineWidth: 2, dash: [6]))
+                        .foregroundStyle(isTargeted ? Color.accentColor : (isHoveringDropZone ? Color.gray : Color.clear))
+                    
+                    VStack(spacing: 8) {
+                        Image(systemName: "photo.on.rectangle.angled")
+                            .font(.system(size: 32))
+                            .symbolRenderingMode(.hierarchical)
+                        Text(LocalizedStringKey("dropzone.title"))
+                            .font(.headline)
+                        Text(LocalizedStringKey("dropzone.subtitle"))
+                            .foregroundStyle(.secondary)
+                    }
                 }
             )
             .frame(height: 180)
             .onDrop(of: ["public.file-url"], isTargeted: $isTargeted) { providers in
                 handleDrop(providers: providers)
             }
+            .onHover { hovering in
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    isHoveringDropZone = hovering
+                }
+            }
     }
 
     private var changelogBanner: some View {
         HStack(alignment: .top, spacing: 12) {
             VStack(alignment: .leading, spacing: 4) {
-                Text("changelog.title")
+                Text(LocalizedStringKey("changelog.title"))
                     .font(.headline)
-                Text("changelog.body")
+                Text(LocalizedStringKey("changelog.body"))
                     .font(.callout)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.leading)
@@ -216,7 +358,7 @@ struct ContentView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 if let linkURL = banner.linkURL {
-                    Link(banner.linkTitle ?? NSLocalizedString("notice.action", comment: ""), destination: linkURL)
+                    Link(banner.linkTitle ?? localizedString("notice.action"), destination: linkURL)
                         .font(.callout)
                 }
             }
@@ -235,47 +377,64 @@ struct ContentView: View {
     }
 
     private var fileList: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 0) {
+            // Status bar header
             HStack {
-                Text(String.localizedStringWithFormat(NSLocalizedString("selected.count", comment: ""), imageURLs.count))
-                    .font(.headline)
+                Text(String.localizedStringWithFormat(localizedString("selected.count %lld"), imageURLs.count))
+                    .font(.subheadline.weight(.medium))
+                    .foregroundStyle(.secondary)
+                
                 Spacer()
+                
                 Button {
                     clearAllImages()
                     statusMessage = nil
                 } label: {
-                    Label(LocalizedStringKey("button.clearAll"), systemImage: "xmark.circle")
+                    HStack(spacing: 4) {
+                        Image(systemName: "trash")
+                        Text(LocalizedStringKey("button.clearAll"))
+                    }
+                    .font(.subheadline)
+                    .foregroundStyle(imageURLs.isEmpty ? Color.secondary.opacity(0.5) : Color.red)
                 }
-                .buttonStyle(.borderless)
+                .buttonStyle(.plain)
+                .disabled(imageURLs.isEmpty)
             }
+            .padding(.horizontal, 4)
+            .padding(.bottom, 8)
 
             ScrollView {
-                LazyVStack(alignment: .leading, spacing: 6) {
+                LazyVStack(alignment: .leading, spacing: 1) {
                     ForEach(imageURLs, id: \.self) { url in
                         HStack {
+                            Image(systemName: "photo")
+                                .foregroundStyle(.secondary)
                             Text(url.lastPathComponent)
-                                .frame(maxWidth: .infinity, alignment: .leading)
                                 .lineLimit(1)
                                 .truncationMode(.middle)
+                            Spacer()
                             Button {
                                 removeImageURL(url)
                             } label: {
-                                Image(systemName: "xmark.circle.fill")
+                                Image(systemName: "xmark")
+                                    .font(.system(size: 10, weight: .bold))
                                     .foregroundStyle(.secondary)
                             }
                             .buttonStyle(.borderless)
+                            .frame(width: 20, height: 20)
+                            .contentShape(Rectangle())
                             .help(LocalizedStringKey("button.removeOne"))
                         }
-                        .padding(.vertical, 4)
+                        .padding(.vertical, 6)
                         .padding(.horizontal, 8)
-                        .background(Color.secondary.opacity(0.08))
+                        .background(Color.secondary.opacity(0.05))
                         .clipShape(RoundedRectangle(cornerRadius: 6))
                     }
                 }
+                .padding(.horizontal, 2)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-
     }
 
     private func handleDrop(providers: [NSItemProvider]) -> Bool {
@@ -307,7 +466,7 @@ struct ContentView: View {
         panel.canChooseFiles = false
         panel.canChooseDirectories = true
         panel.allowsMultipleSelection = false
-        panel.prompt = "选择"
+        panel.prompt = localizedString("panel.choose")
         panel.begin { response in
             if response == .OK {
                 outputFolder = panel.urls.first
@@ -321,7 +480,7 @@ struct ContentView: View {
         panel.canChooseDirectories = false
         panel.allowsMultipleSelection = true
         panel.allowedContentTypes = [.image]
-        panel.prompt = "添加"
+        panel.prompt = localizedString("panel.add")
         panel.begin { response in
             if response == .OK {
                 handleNewImageURLs(panel.urls)
@@ -341,7 +500,7 @@ struct ContentView: View {
             }
 
             if imported.isEmpty {
-                statusMessage = NSLocalizedString("status.noneSupported", comment: "")
+                statusMessage = localizedString("status.noneSupported")
                 photoPickerItems.removeAll()
                 return
             }
@@ -376,9 +535,9 @@ struct ContentView: View {
         let filtered = urls.filter { ImageStripper.isSupportedImage(url: $0) }
         imageURLs.append(contentsOf: filtered)
         if filtered.isEmpty {
-            statusMessage = NSLocalizedString("status.noneSupported", comment: "")
+            statusMessage = localizedString("status.noneSupported")
         } else {
-            statusMessage = String.localizedStringWithFormat(NSLocalizedString("status.added", comment: ""), filtered.count)
+            statusMessage = String.localizedStringWithFormat(localizedString("status.added %lld"), filtered.count)
         }
     }
 
@@ -405,7 +564,7 @@ struct ContentView: View {
         let urlsToProcess = imageURLs
         let configuration = outputConfiguration
         isProcessing = true
-        statusMessage = NSLocalizedString("status.processing", comment: "")
+        statusMessage = localizedString("status.processing")
 
         Task.detached {
             var successCount = 0
@@ -433,19 +592,26 @@ struct ContentView: View {
 
             await MainActor.run {
                 isProcessing = false
+                
+                // Trigger success animation
+                withAnimation {
+                    showSuccessCheck = true
+                }
+                
+                // Hide success check after delay
+                Task {
+                    try? await Task.sleep(nanoseconds: 2_000_000_000) // 2 seconds
+                    await MainActor.run {
+                        withAnimation {
+                            showSuccessCheck = false
+                        }
+                    }
+                }
+
                 if finalSkipped > 0 {
-                    statusMessage = String.localizedStringWithFormat(
-                        NSLocalizedString("status.doneDetailed", comment: ""),
-                        finalSuccess,
-                        finalFailure,
-                        finalSkipped
-                    )
+                    statusMessage = String.localizedStringWithFormat(localizedString("status.doneDetailed %lld %lld %lld"), finalSuccess, finalFailure, finalSkipped)
                 } else {
-                    statusMessage = String.localizedStringWithFormat(
-                        NSLocalizedString("status.done", comment: ""),
-                        finalSuccess,
-                        finalFailure
-                    )
+                    statusMessage = String.localizedStringWithFormat(localizedString("status.done %lld %lld"), finalSuccess, finalFailure)
                 }
             }
         }
@@ -497,6 +663,18 @@ struct ContentView: View {
         withAnimation {
             showNoticeBanner = false
         }
+    }
+
+    private func localizedString(_ key: String) -> String {
+        // If using system, fall back to default NSLocalizedString behavior
+        if languagePreference == "system" {
+            return NSLocalizedString(key, comment: "")
+        }
+        if let path = Bundle.main.path(forResource: languagePreference, ofType: "lproj"),
+           let langBundle = Bundle(path: path) {
+            return langBundle.localizedString(forKey: key, value: nil, table: nil)
+        }
+        return NSLocalizedString(key, comment: "")
     }
 }
 
@@ -650,14 +828,14 @@ private struct NoticeBanner: Equatable {
 private struct AppInfoView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("info.title")
+            Text(LocalizedStringKey("info.title"))
                 .font(.headline)
-            Text("info.subtitle")
+            Text(LocalizedStringKey("info.subtitle"))
                 .foregroundStyle(.secondary)
             Divider()
-            Text("info.supported")
+            Text(LocalizedStringKey("info.supported"))
                 .font(.callout)
-            Text("info.outputRule")
+            Text(LocalizedStringKey("info.outputRule"))
                 .font(.callout)
         }
     }
@@ -670,6 +848,8 @@ private struct FullscreenDisabler: NSViewRepresentable {
             if let window = view.window {
                 window.collectionBehavior.insert(.fullScreenNone)
                 window.collectionBehavior.remove(.fullScreenPrimary)
+                window.isOpaque = false
+                window.backgroundColor = .clear
             }
         }
         return view
@@ -683,86 +863,106 @@ private struct OutputSettingsView: View {
     @State private var draft: OutputConfiguration
     let onSave: (OutputConfiguration) -> Void
 
+    @AppStorage("languagePreference") private var languagePreference: String = "system"
+
     init(configuration: OutputConfiguration, onSave: @escaping (OutputConfiguration) -> Void) {
         _draft = State(initialValue: configuration)
         self.onSave = onSave
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("output.settingsTitle")
-                .font(.title3)
-            Text("output.settingsDescription")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+        ZStack {
+            // Match main view's material background
+            Rectangle()
+                .fill(.regularMaterial)
+                .ignoresSafeArea()
 
-            VStack(alignment: .leading, spacing: 8) {
-                Text("output.suffixLabel")
-                    .font(.headline)
-                TextField(LocalizedStringKey("output.suffixPlaceholder"), text: $draft.suffix)
-                    .textFieldStyle(.roundedBorder)
-            }
+            VStack(alignment: .leading, spacing: 16) {
+                Text(localizedString("output.settingsTitle"))
+                    .font(.title3)
+                Text(localizedString("output.settingsDescription"))
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
 
-            VStack(alignment: .leading, spacing: 8) {
-                Text("output.ruleLabel")
-                    .font(.headline)
                 VStack(alignment: .leading, spacing: 8) {
-                    ForEach(OutputConflictRule.allCases) { rule in
-                        OutputRuleOptionRow(
-                            rule: rule,
-                            isSelected: draft.rule == rule,
-                            action: { draft.rule = rule }
-                        )
+                    Text(localizedString("output.suffixLabel"))
+                        .font(.headline)
+                    TextField(localizedString("output.suffixPlaceholder"), text: $draft.suffix)
+                        .textFieldStyle(.roundedBorder)
+                }
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(localizedString("output.ruleLabel"))
+                        .font(.headline)
+                    VStack(alignment: .leading, spacing: 8) {
+                        ForEach(OutputConflictRule.allCases) { rule in
+                            OutputRuleOptionRow(
+                                rule: rule,
+                                isSelected: draft.rule == rule,
+                                action: { draft.rule = rule }
+                            )
+                        }
                     }
+                    .padding(12)
+                    .background(Color.secondary.opacity(0.08))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
-                .padding(12)
-                .background(Color.secondary.opacity(0.08))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-            }
 
-            Spacer()
-
-            HStack {
-                Button(LocalizedStringKey("button.cancel")) {
-                    dismiss()
-                }
                 Spacer()
-                Button(LocalizedStringKey("button.saveChanges")) {
-                    save()
+
+                HStack {
+                    Button(localizedString("button.cancel")) {
+                        dismiss()
+                    }
+                    Spacer()
+                    Button(localizedString("button.saveChanges")) {
+                        save()
+                    }
+                    .keyboardShortcut(.defaultAction)
                 }
-                .keyboardShortcut(.defaultAction)
             }
+            .padding(24)
+            .frame(minWidth: 360)
         }
-        .padding(24)
-        .frame(minWidth: 360)
     }
 
     private func save() {
         onSave(draft.normalized())
         dismiss()
     }
+
+    private func localizedString(_ key: String) -> String {
+        if languagePreference == "system" {
+            return NSLocalizedString(key, comment: "")
+        }
+        if let path = Bundle.main.path(forResource: languagePreference, ofType: "lproj"),
+           let langBundle = Bundle(path: path) {
+            return langBundle.localizedString(forKey: key, value: nil, table: nil)
+        }
+        return NSLocalizedString(key, comment: "")
+    }
 }
 
 private extension OutputConflictRule {
-    var titleKey: LocalizedStringKey {
+    var titleKeyString: String {
         switch self {
         case .appendIndex:
-            return LocalizedStringKey("output.rule.appendIndex")
+            return "output.rule.appendIndex"
         case .overwrite:
-            return LocalizedStringKey("output.rule.overwrite")
+            return "output.rule.overwrite"
         case .skip:
-            return LocalizedStringKey("output.rule.skip")
+            return "output.rule.skip"
         }
     }
 
-    var detailKey: LocalizedStringKey {
+    var detailKeyString: String {
         switch self {
         case .appendIndex:
-            return LocalizedStringKey("output.rule.appendIndex.desc")
+            return "output.rule.appendIndex.desc"
         case .overwrite:
-            return LocalizedStringKey("output.rule.overwrite.desc")
+            return "output.rule.overwrite.desc"
         case .skip:
-            return LocalizedStringKey("output.rule.skip.desc")
+            return "output.rule.skip.desc"
         }
     }
 }
@@ -772,15 +972,17 @@ private struct OutputRuleOptionRow: View {
     let isSelected: Bool
     let action: () -> Void
 
+    @AppStorage("languagePreference") private var languagePreference: String = "system"
+
     var body: some View {
         Button(action: action) {
             HStack(alignment: .top, spacing: 8) {
                 Image(systemName: isSelected ? "largecircle.fill.circle" : "circle")
                     .foregroundStyle(isSelected ? Color.accentColor : Color.secondary)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(rule.titleKey)
+                    Text(localizedString(rule.titleKeyString))
                         .foregroundStyle(.primary)
-                    Text(rule.detailKey)
+                    Text(localizedString(rule.detailKeyString))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -789,6 +991,17 @@ private struct OutputRuleOptionRow: View {
             .padding(.vertical, 2)
         }
         .buttonStyle(.plain)
+    }
+
+    private func localizedString(_ key: String) -> String {
+        if languagePreference == "system" {
+            return NSLocalizedString(key, comment: "")
+        }
+        if let path = Bundle.main.path(forResource: languagePreference, ofType: "lproj"),
+           let langBundle = Bundle(path: path) {
+            return langBundle.localizedString(forKey: key, value: nil, table: nil)
+        }
+        return NSLocalizedString(key, comment: "")
     }
 }
 

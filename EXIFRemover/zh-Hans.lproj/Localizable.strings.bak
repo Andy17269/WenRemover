@@ -5,9 +5,9 @@
 "menu.help" = "帮助";
 
 "button.addFiles" = "添加文件";
-"menu.addFromFinder" = "从「访达」添加";
-"button.addFromPhotos" = "从「照片」添加";
-"button.chooseOutput" = "输出目录";
+"menu.addFromFinder" = "从“访达”添加";
+"button.addFromPhotos" = "从“照片”添加";
+"button.chooseOutput" = "选择输出目录";
 "button.removeExif" = "移除 EXIF";
 "button.removing" = "正在移除…";
 "button.clearList" = "清空列表";
@@ -22,13 +22,13 @@
 "dropzone.title" = "拖拽图片到此处";
 "dropzone.subtitle" = "支持 JPG / PNG / HEIC / TIFF 的图像文件";
 
-"selected.count %lld" = "已选择：%lld";
+"selected.count" = "已选择：%d";
 
 "status.noneSupported" = "未识别到可处理的图片。";
-"status.added %lld" = "已添加 %lld 张图片。";
+"status.added" = "已添加 %d 张图片。";
 "status.processing" = "处理中…";
-"status.done %lld %lld" = "完成：成功 %lld 张，失败 %lld 张。";
-"status.doneDetailed %lld %lld %lld" = "完成：成功 %lld 张，失败 %lld 张，跳过 %lld 张。";
+"status.done" = "完成：成功 %d 张，失败 %d 张。";
+"status.doneDetailed" = "完成：成功 %d 张，失败 %d 张，跳过 %d 张。";
 
 "info.title" = "WenRemover";
 "info.subtitle" = "移除图片 EXIF 信息以保护隐私。";
@@ -48,8 +48,8 @@
 "output.rule.skip" = "跳过已有文件";
 "output.rule.skip.desc" = "保留原文件并将任务记为“已跳过”";
 
-"changelog.title" = "v1.202.7 更新";
-"changelog.body" = "• 首页全新毛玻璃背景和UI。\n• 优化图片拖拽添加逻辑，新增提示动画。\n• 更新未选择目录时的提醒红点。\n• 添加英语支持，可于「设置-语言」中手动切换或跟随系统语言。";
+"changelog.title" = "v1.202.6(2)更新";
+"changelog.body" = "• 新增输出设置功能，可自定义输出后缀与文件名冲突时的规则。\n• 新增“从‘照片’添加“功能”。\n• 修复部分 HEIC 图片处理问题。";
 "changelog.dismiss" = "关闭";
 
 "notice.defaultTitle" = "公告";
@@ -71,22 +71,3 @@
 "appearance.light" = "浅色";
 "appearance.dark" = "深色";
 "appearance.system" = "跟随系统";
-"appearance.theme" = "外观设置";
-
-"settings.language.section" = "语言";
-"settings.language.label" = "应用语言";
-"settings.language.system" = "跟随系统";
-"settings.language.english" = "English";
-"settings.language.chinese" = "简体中文";
-
-"settings.window.title" = "WenRemover 设置";
-
-// Panel prompts
-"panel.choose" = "选择";
-"panel.add" = "添加";
-
-// ImageStripper errors
-"error.invalidImage" = "无法读取图片。";
-"error.cannotCreateDestination" = "无法创建输出文件。";
-"error.cannotWrite" = "写入失败。";
-"error.skippedByRule" = "已存在同名文件，且规则设置为跳过。";

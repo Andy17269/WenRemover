@@ -123,13 +123,13 @@ enum ImageStripper {
         var errorDescription: String? {
             switch self {
             case .invalidImage:
-                return "无法读取图片。"
+                return NSLocalizedString("error.invalidImage", comment: "")
             case .cannotCreateDestination:
-                return "无法创建输出文件。"
+                return NSLocalizedString("error.cannotCreateDestination", comment: "")
             case .cannotWrite:
-                return "写入失败。"
+                return NSLocalizedString("error.cannotWrite", comment: "")
             case .skippedByRule:
-                return "已存在同名文件，且规则设置为跳过。"
+                return NSLocalizedString("error.skippedByRule", comment: "")
             }
         }
     }

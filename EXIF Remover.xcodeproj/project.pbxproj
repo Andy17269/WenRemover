@@ -10,8 +10,8 @@
 		A1B2C3D4E5F6A7B8C9D0E101 /* EXIFRemoverApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E201 /* EXIFRemoverApp.swift */; };
 		A1B2C3D4E5F6A7B8C9D0E102 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E202 /* ContentView.swift */; };
 		A1B2C3D4E5F6A7B8C9D0E103 /* ImageStripper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E203 /* ImageStripper.swift */; };
-		A1B2C3D4E5F6A7B8C9D0E105 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E205 /* SettingsView.swift */; };
 		A1B2C3D4E5F6A7B8C9D0E104 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E204 /* Assets.xcassets */; };
+		A1B2C3D4E5F6A7B8C9D0E105 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E205 /* SettingsView.swift */; };
 		A1B2C3D4E5F6A7B8C9D0E120 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E220 /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
@@ -19,8 +19,8 @@
 		A1B2C3D4E5F6A7B8C9D0E201 /* EXIFRemoverApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EXIFRemoverApp.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F6A7B8C9D0E202 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F6A7B8C9D0E203 /* ImageStripper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageStripper.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F6A7B8C9D0E205 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F6A7B8C9D0E204 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A1B2C3D4E5F6A7B8C9D0E205 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F6A7B8C9D0E206 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A1B2C3D4E5F6A7B8C9D0E207 /* WenRemover.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; path = WenRemover.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1B2C3D4E5F6A7B8C9D0E221 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -278,7 +278,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 5;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = EXIFRemover/Info.plist;
@@ -288,8 +288,8 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.6;
-				MARKETING_VERSION = 1.202.6;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.202.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.andywen.wenremover;
 				PRODUCT_NAME = WenRemover;
 				SWIFT_VERSION = 5.0;
@@ -303,7 +303,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 5;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = EXIFRemover/Info.plist;
@@ -313,8 +313,8 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.6;
-				MARKETING_VERSION = 1.202.6;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.202.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.andywen.wenremover;
 				PRODUCT_NAME = WenRemover;
 				SWIFT_VERSION = 5.0;
