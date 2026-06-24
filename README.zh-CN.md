@@ -2,14 +2,17 @@
 
 一个基于 SwiftUI 的 macOS 小工具，用于批量移除图片 EXIF 信息。
 
+<img width="1470" height="956" alt="app-screenshot" src="https://github.com/user-attachments/assets/bb80a797-e487-4718-a80d-a039394d2ab9" />
+
 ## 功能
-- 拖拽图片到应用窗口；
+- 拖拽图片到应用窗口，支持从“照片”App中选择；
 - 选择输出目录和规则；
 - 一键批量清除 EXIF；
+- 液态玻璃设计；
 
 ## 运行
-1. 在Releases页下载最新版本；
-2. 安装并打开应用(可能需要在“设置”手动信任此App)；
+1. 在Releases页下载 dmg ；
+2. 安装并打开应用(暂无开发者签名，可能需要在“设置”手动信任此App)；
 3. Enjoy！
 
 ## 使用说明
@@ -18,3 +21,6 @@
 - 点击“移除 EXIF”
 
 输出文件会按照你自定义的后缀保存到指定目录（可自定义，默认为 `_clean`）。
+
+<s>在WenBlog上查看使用说明</s>
+Blog崩溃，相关Docs丢失待恢复（腾讯云干的！）
