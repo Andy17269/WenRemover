@@ -7,17 +7,30 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0C0EE88121C43DEE9EDA1F11 /* PrivacyRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9666478B889618676CA1F48 /* PrivacyRenderer.swift */; };
+		246F11A66516D5C29767F8AB /* EXIFInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90DA9C3231C976DBB19A5232 /* EXIFInfoView.swift */; };
+		26C87DDD005B67BE84B26C69 /* PrivacyRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = B301806D79869DC9B68F9DF4 /* PrivacyRegion.swift */; };
+		459BC5A0DD03AEB2F5FB4137 /* EXIFRemoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE73E1C59E45C03A974C3C5 /* EXIFRemoverView.swift */; };
+		632B418E0D04B99546B52F6D /* PrivacyProtectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533075535F57D0B7F705565D /* PrivacyProtectorView.swift */; };
+		7B434726559AF79DD8BF70F4 /* PrivacyEditorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE00290696301CBDFFAF2678 /* PrivacyEditorViewModel.swift */; };
 		A1B2C3D4E5F6A7B8C9D0E101 /* EXIFRemoverApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E201 /* EXIFRemoverApp.swift */; };
-		A1B2C3D4E5F6A7B8C9D0E102 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E202 /* ContentView.swift */; };
 		A1B2C3D4E5F6A7B8C9D0E103 /* ImageStripper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E203 /* ImageStripper.swift */; };
 		A1B2C3D4E5F6A7B8C9D0E104 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E204 /* Assets.xcassets */; };
 		A1B2C3D4E5F6A7B8C9D0E105 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E205 /* SettingsView.swift */; };
 		A1B2C3D4E5F6A7B8C9D0E120 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E220 /* Localizable.strings */; };
+		AC66476010A46DEAE797B46C /* EXIFViewerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 555EB3DB20B97E108E24510E /* EXIFViewerView.swift */; };
+		B62DE76E7967118662362E15 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C989FAAEFFC58C7669052D91 /* ContentView.swift */; };
+		B8EF2E2466A600D783735B99 /* EXIFReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44533A176374CA0F5E8E7356 /* EXIFReader.swift */; };
+		F294795AE521E957FA3B5FFC /* PrivacyDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6AE97A2BF74965EE87EBFA5 /* PrivacyDetector.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0AE73E1C59E45C03A974C3C5 /* EXIFRemoverView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EXIFRemoverView.swift; sourceTree = "<group>"; };
+		44533A176374CA0F5E8E7356 /* EXIFReader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EXIFReader.swift; sourceTree = "<group>"; };
+		533075535F57D0B7F705565D /* PrivacyProtectorView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PrivacyProtectorView.swift; sourceTree = "<group>"; };
+		555EB3DB20B97E108E24510E /* EXIFViewerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EXIFViewerView.swift; sourceTree = "<group>"; };
+		90DA9C3231C976DBB19A5232 /* EXIFInfoView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EXIFInfoView.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F6A7B8C9D0E201 /* EXIFRemoverApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EXIFRemoverApp.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F6A7B8C9D0E202 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F6A7B8C9D0E203 /* ImageStripper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageStripper.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F6A7B8C9D0E204 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A1B2C3D4E5F6A7B8C9D0E205 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -25,6 +38,11 @@
 		A1B2C3D4E5F6A7B8C9D0E207 /* WenRemover.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; path = WenRemover.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1B2C3D4E5F6A7B8C9D0E221 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A1B2C3D4E5F6A7B8C9D0E222 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		AE00290696301CBDFFAF2678 /* PrivacyEditorViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PrivacyEditorViewModel.swift; sourceTree = "<group>"; };
+		B301806D79869DC9B68F9DF4 /* PrivacyRegion.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PrivacyRegion.swift; sourceTree = "<group>"; };
+		C989FAAEFFC58C7669052D91 /* ContentView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		E9666478B889618676CA1F48 /* PrivacyRenderer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PrivacyRenderer.swift; sourceTree = "<group>"; };
+		F6AE97A2BF74965EE87EBFA5 /* PrivacyDetector.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PrivacyDetector.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,12 +60,21 @@
 			isa = PBXGroup;
 			children = (
 				A1B2C3D4E5F6A7B8C9D0E201 /* EXIFRemoverApp.swift */,
-				A1B2C3D4E5F6A7B8C9D0E202 /* ContentView.swift */,
 				A1B2C3D4E5F6A7B8C9D0E203 /* ImageStripper.swift */,
 				A1B2C3D4E5F6A7B8C9D0E205 /* SettingsView.swift */,
 				A1B2C3D4E5F6A7B8C9D0E220 /* Localizable.strings */,
 				A1B2C3D4E5F6A7B8C9D0E204 /* Assets.xcassets */,
 				A1B2C3D4E5F6A7B8C9D0E206 /* Info.plist */,
+				C989FAAEFFC58C7669052D91 /* ContentView.swift */,
+				0AE73E1C59E45C03A974C3C5 /* EXIFRemoverView.swift */,
+				B301806D79869DC9B68F9DF4 /* PrivacyRegion.swift */,
+				F6AE97A2BF74965EE87EBFA5 /* PrivacyDetector.swift */,
+				E9666478B889618676CA1F48 /* PrivacyRenderer.swift */,
+				AE00290696301CBDFFAF2678 /* PrivacyEditorViewModel.swift */,
+				533075535F57D0B7F705565D /* PrivacyProtectorView.swift */,
+				44533A176374CA0F5E8E7356 /* EXIFReader.swift */,
+				90DA9C3231C976DBB19A5232 /* EXIFInfoView.swift */,
+				555EB3DB20B97E108E24510E /* EXIFViewerView.swift */,
 			);
 			path = EXIFRemover;
 			sourceTree = "<group>";
@@ -140,9 +167,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1B2C3D4E5F6A7B8C9D0E101 /* EXIFRemoverApp.swift in Sources */,
-				A1B2C3D4E5F6A7B8C9D0E102 /* ContentView.swift in Sources */,
 				A1B2C3D4E5F6A7B8C9D0E103 /* ImageStripper.swift in Sources */,
 				A1B2C3D4E5F6A7B8C9D0E105 /* SettingsView.swift in Sources */,
+				B62DE76E7967118662362E15 /* ContentView.swift in Sources */,
+				459BC5A0DD03AEB2F5FB4137 /* EXIFRemoverView.swift in Sources */,
+				26C87DDD005B67BE84B26C69 /* PrivacyRegion.swift in Sources */,
+				F294795AE521E957FA3B5FFC /* PrivacyDetector.swift in Sources */,
+				0C0EE88121C43DEE9EDA1F11 /* PrivacyRenderer.swift in Sources */,
+				7B434726559AF79DD8BF70F4 /* PrivacyEditorViewModel.swift in Sources */,
+				632B418E0D04B99546B52F6D /* PrivacyProtectorView.swift in Sources */,
+				B8EF2E2466A600D783735B99 /* EXIFReader.swift in Sources */,
+				246F11A66516D5C29767F8AB /* EXIFInfoView.swift in Sources */,
+				AC66476010A46DEAE797B46C /* EXIFViewerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,7 +325,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.202.7;
+				MARKETING_VERSION = 1.206.27;
 				PRODUCT_BUNDLE_IDENTIFIER = com.andywen.wenremover;
 				PRODUCT_NAME = WenRemover;
 				SWIFT_VERSION = 5.0;
@@ -314,7 +350,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.202.7;
+				MARKETING_VERSION = 1.206.27;
 				PRODUCT_BUNDLE_IDENTIFIER = com.andywen.wenremover;
 				PRODUCT_NAME = WenRemover;
 				SWIFT_VERSION = 5.0;

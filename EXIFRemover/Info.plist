@@ -18,11 +18,9 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Need access to import images from Photos.</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2026 AndyWen</string>
-	<key>NSMainStoryboardFile</key>
-	<string></string>
+	<string>Copyright © 2026 AndyWen.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>需要权限以从“照片”App中添加图片/视频。</string>
 </dict>
 </plist>

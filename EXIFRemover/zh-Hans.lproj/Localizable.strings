@@ -5,43 +5,45 @@
 |  _ <  | |___   / ___ \  | |___  |  _  |     | |   |  _  | | |___    |  _|    | |  | |\  |  / ___ \  | |___   ___) |
 |_| \_\ |_____| /_/   \_\  \____| |_| |_|     |_|   |_| |_| |_____|   |_|     |___| |_| \_| /_/   \_\ |_____| |____/
 LOVE WITH CNS.
-Sealed on February 21, 2026, Version 1.202.7.
+Sealed on June 24, 2026, Version 1.202.7.
  */
 /* 首页头部 */
 "app.title" = "WenRemover";
-"app.subtitle" = "拖拽图片到下方区域，选择输出目录，点击“移除EXIF”即可批量移除所有图片隐私信息。";
-"tutorial.link" = "查看使用教程/帮助";
+"app.subtitle" = "拖拽图片到下方，选择输出目录，点击“移除 EXIF”即可。";
+"tutorial.link" = "使用教程 & 帮助";
 "help.about" = "关于";
 "menu.help" = "帮助";
 /* 首页按钮 */
-"button.addFiles" = "添加文件";
+"button.addFiles" = "添加";
 "menu.addFromFinder" = "从「访达」添加";
 "button.addFromPhotos" = "从「照片」添加";
 "button.chooseOutput" = "输出目录";
 "button.removeExif" = "移除 EXIF";
 "button.removing" = "正在移除…";
-"button.clearList" = "清空列表";
-"button.clearAll" = "清空全部";
+"button.clearList" = "清空";
+"button.clearAll" = "清空";
 "button.removeOne" = "删除";
 "button.outputSettings" = "输出设置";
 "button.cancel" = "取消";
 "button.saveChanges" = "保存";
+"button.copyToClipboard" = "复制";
+"status.copiedToClipboard" = "已复制到剪贴板";
 /* Tips */
 "output.none" = "未选择";
 "dropzone.title" = "拖拽图片到此处";
-"dropzone.subtitle" = "支持 JPG / PNG / HEIC / TIFF 的图像文件";
+"dropzone.subtitle" = "支持 JPG / PNG / HEIC / TIFF 等多种图像文件";
 /* 状态 */
-"selected.count %lld" = "已选择：%lld";
+"selected.count %lld" = "已选择 %lld";
 "status.noneSupported" = "未识别到可处理的图片。";
 "status.added %lld" = "已添加 %lld 张图片。";
 "status.processing" = "处理中…";
-"status.done %lld %lld" = "完成：成功 %lld 张，失败 %lld 张。";
-"status.doneDetailed %lld %lld %lld" = "完成：成功 %lld 张，失败 %lld 张，跳过 %lld 张。";
+"status.done %lld %lld" = "完成，其中成功 %lld 张，失败 %lld 张。";
+"status.doneDetailed %lld %lld %lld" = "完成，其中成功 %lld 张，失败 %lld 张，跳过 %lld 张。";
 /* 小info */
 "info.title" = "WenRemover";
-"info.subtitle" = "移除图片 EXIF 信息以保护隐私。";
-"info.supported" = "支持格式：JPG / PNG / HEIC / TIFF";
-"info.outputRule" = "输出规则：原文件名 + 自定义后缀（默认 _clean）";
+"info.subtitle" = "一款 EXIF 小工具。";
+"info.supported" = "支持 EXIF 移除、智能隐私打码和 EXIF 元信息查看。";
+"info.outputRule" = "2026 @ AndyWen.";
 /* 输出设置 */
 "help.outputSettings" = "自定义输出后缀与规则";
 "output.settingsTitle" = "输出设置";
@@ -56,9 +58,12 @@ Sealed on February 21, 2026, Version 1.202.7.
 "output.rule.skip" = "跳过已有文件";
 "output.rule.skip.desc" = "保留原文件并将任务记为“已跳过”";
 /* 更新Log&通知 */
-"changelog.title" = "v1.202.7 更新 🎉";
-"changelog.body" = "• 全新毛玻璃背景和圆角UI（BETA 版）。\n• 优化图片拖拽添加逻辑，新增提示动画。\n• 改进未选择目录时的提醒，输出目录现仅显示目录名。\n• 多语言支持，可于「设置-语言」中手动切换或跟随系统语言。\n• 新增错误序号，可于帮助页寻找解决方案。";
+"changelog.title" = "v1.6.27 更新";
+"changelog.body" = "• 新增「隐私打码」(Beta 版)，采用设备端模型自动打码并支持手动框选；\n• 改进了各页面的UI样式，部分功能新增动画；\n• 新增「查看 EXIF」功能，可查看图片元数据；\n• 改进了英语本地化翻译文本；\n• 在初次启动时，WenRemover 将会请求“下载“文件夹的访问权限以供快速保存，可在设置页面修改。";
 "changelog.dismiss" = "关闭";
+"privacy.beta.title" = "隐私打码 (Beta 版)";
+"privacy.beta.body" = "这是一个 Beta 版功能，所有识别均在设备端进行。\n如果有检测遗漏或错误识别，你可以在预览界面点击对应区域取消选择并选择手动框选。";
+"privacy.beta.dismiss" = "关闭";
 "notice.defaultTitle" = "公告";
 "notice.dismiss" = "关闭";
 "notice.action" = "查看详情";
@@ -66,10 +71,13 @@ Sealed on February 21, 2026, Version 1.202.7.
 "settings.network.section" = "联网";
 "settings.notice.disable" = "关闭通知";
 "settings.notice.disable.note" = "关闭后将不再显示公告/特别通知。";
+"settings.general.section" = "常规";
 "settings.dev.section" = "开发";
 "settings.dev.options" = "选项";
-"settings.dev.alwaysShowChangelog" = "始终显示更新日志";
-"settings.dev.alwaysShowChangelog.note" = "开启后将持续显示更新日志。";
+"settings.dev.alwaysShowChangelog" = "始终显示所有提示";
+"settings.dev.alwaysShowChangelog.note" = "开启后将持续显示更新日志和首次打开提示。";
+"settings.notice.reset" = "重置所有提示状态";
+"settings.notice.reset.note" = "点击以恢复各页面的首次打开提示（如 Beta 提示、更新日志）。";
 "settings.output.section" = "输出设置";
 "settings.output.reset" = "恢复默认输出设置";
 "settings.output.reset.note" = "恢复默认的输出设置。若要自定义输出设置，请前往首页「输出设置」。";
@@ -98,3 +106,52 @@ Sealed on February 21, 2026, Version 1.202.7.
 "error.cannotCreateDestination" = "无法创建输出文件。（错误1）";
 "error.cannotWrite" = "写入失败。";
 "error.skippedByRule" = "已存在同名文件，且规则设置为跳过。";
+
+/* Tab View & Privacy Protector */
+"tab.exif" = "移除 EXIF";
+"tab.privacy" = "隐私打码";
+"privacy.title" = "隐私打码（BETA 版）";
+"privacy.subtitle" = "自动检测并打码人脸、文字及二维码信息。";
+"privacy.status.loaded" = "图片已加载。";
+"privacy.status.detecting" = "正在检测隐私区域...";
+"privacy.status.noRegions" = "未检测到隐私区域。";
+"privacy.status.review %lld" = "检测到 %lld 个区域，请检查并调整。";
+"privacy.status.items %lld" = "队列中共有 %lld 张图片，请检查并调整。";
+"privacy.status.rendering" = "正在应用滤镜...";
+"privacy.status.exported" = "已成功导出。";
+"privacy.intensity.light" = "轻";
+"privacy.intensity.medium" = "中";
+"privacy.intensity.heavy" = "重";
+"privacy.intensity.label" = "打码强度";
+"privacy.button.drawMode" = "手动框选";
+"privacy.button.detect" = "检测隐私";
+"privacy.button.export" = "打码并导出";
+"privacy.button.exportAll" = "打码并导出";
+
+"permission.alert.title" = "需要文件夹访问权限";
+"permission.alert.message" = "你拒绝了访问下载文件夹，因此在导出时需手动选择目录，或在系统设置中授予权限。";
+"permission.alert.button" = "好的";
+
+"settings.permission.section" = "权限管理";
+"settings.permission.manage" = "管理文件夹访问权限";
+"settings.permission.note" = "点击以在系统设置中允许或撤销应用对文件的访问权限。";
+
+/* EXIF Info */
+"button.info" = "信息";
+"exif.info.title" = "图片信息";
+"exif.make" = "设备制造商";
+"exif.model" = "设备型号";
+"exif.lens" = "镜头型号";
+"exif.datetime" = "拍摄时间";
+"exif.focalLength" = "焦距";
+"exif.colorProfile" = "色彩配置文件";
+"exif.colorDepth" = "色彩深度";
+"exif.aperture" = "光圈";
+"exif.exposureTime" = "曝光时间";
+"exif.iso" = "ISO 速度";
+"exif.location" = "地理位置";
+"exif.noLocation" = "无 GPS 信息";
+
+"tab.exifViewer" = "查看 EXIF";
+"exifviewer.subtitle" = "查看图片的元数据 & 拍摄地理位置。";
+"button.nextImage" = "下一张";

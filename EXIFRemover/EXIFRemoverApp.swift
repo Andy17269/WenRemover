@@ -60,14 +60,14 @@ struct EXIFRemoverApp: App {
     }
 
     private var minWindowWidth: CGFloat {
-        if languagePreference == "en" { return 685 }
-        if languagePreference == "zh-Hans" { return 580 }
+        if languagePreference == "en" { return 820 }
+        if languagePreference == "zh-Hans" { return 780 }
         // System fallback
         let lang = Locale.current.language.languageCode?.identifier ?? "en"
-        return lang.contains("zh") ? 580 : 685
+        return lang.contains("zh") ? 780 : 820
     }
 
-    private let minWindowHeight: CGFloat = 640
+    private let minWindowHeight: CGFloat = 680
 
     private func setMainWindowToMinSize() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {

@@ -1,29 +1,32 @@
 /* Application strings (English) */
 "app.title" = "WenRemover";
-"app.subtitle" = "Drag images below, select an output folder, and click \"Remove EXIF\" to batch remove all metadata.";
-"tutorial.link" = "View tutorial / Help (Simplified Chinese)";
+"app.subtitle" = "Drag images below, select an output folder, and click \"Remove EXIF\".";
+"tutorial.link" = "Tutorial & Help";
 "help.about" = "About";
 "menu.help" = "Help";
 
-"button.addFiles" = "Add Files";
+"button.addFiles" = "Add";
 "menu.addFromFinder" = "Add from Finder";
-"button.addFromPhotos" = "Add from Photos";
+"button.addFromPhotos" = "From Photos";
 "button.chooseOutput" = "Output Folder";
 "button.removeExif" = "Remove EXIF";
 "button.removing" = "Removing…";
-"button.clearList" = "Clear List";
-"button.clearAll" = "Clear All";
+"button.clearList" = "Clear";
+"button.clearAll" = "Clear";
 "button.removeOne" = "Delete";
 "button.outputSettings" = "Output Settings";
+"button.run" = "Run";
 "button.cancel" = "Cancel";
 "button.saveChanges" = "Save";
+"button.copyToClipboard" = "Copy";
+"status.copiedToClipboard" = "Copied to Clipboard";
 
-"output.none" = "Not selected";
+"output.none" = "Not Selected";
 
 "dropzone.title" = "Drop images here";
-"dropzone.subtitle" = "Supports JPG / PNG / HEIC / TIFF image files";
+"dropzone.subtitle" = "Supports JPG / PNG / HEIC / TIFF files";
 
-"selected.count %lld" = "Selected: %lld";
+"selected.count %lld" = "Selected %lld";
 
 "status.noneSupported" = "No supported images found.";
 "status.added %lld" = "Added %lld images.";
@@ -32,49 +35,55 @@
 "status.doneDetailed %lld %lld %lld" = "Done: %lld succeeded, %lld failed, %lld skipped.";
 
 "info.title" = "WenRemover";
-"info.subtitle" = "Remove EXIF metadata from images to protect privacy.";
-"info.supported" = "Supported formats: JPG / PNG / HEIC / TIFF";
-"info.outputRule" = "Output rule: original filename + custom suffix (default _clean)";
+"info.subtitle" = "An EXIF utility tool.";
+"info.supported" = "Supports EXIF removal, privacy redaction and EXIF viewer.";
+"info.outputRule" = "2026 @ AndyWen.";
 
 "help.outputSettings" = "Customize output suffix and conflict rule";
 "output.settingsTitle" = "Output Settings";
 "output.settingsDescription" = "Choose how files are named after processing.";
 "output.suffixLabel" = "File name suffix";
 "output.suffixPlaceholder" = "Example: _clean";
-"output.ruleLabel" = "When a name already exists";
-"output.rule.appendIndex" = "Automatically append counter";
-"output.rule.appendIndex.desc" = "Append _1, _2, … to the filename to avoid conflicts.";
-"output.rule.overwrite" = "Overwrite existing file";
-"output.rule.overwrite.desc" = "Replace the existing file with the new output.";
-"output.rule.skip" = "Skip existing file";
-"output.rule.skip.desc" = "Leave the original file untouched and mark the item as skipped.";
+"output.ruleLabel" = "When a file already exists";
+"output.rule.appendIndex" = "Append index";
+"output.rule.appendIndex.desc" = "Append _1, _2… to filename to avoid conflicts.";
+"output.rule.overwrite" = "Overwrite file";
+"output.rule.overwrite.desc" = "Delete existing file and save new output.";
+"output.rule.skip" = "Skip file";
+"output.rule.skip.desc" = "Keep original file and mark as skipped.";
 
-"changelog.title" = "v1.202.7 Updates";
-"changelog.body" = "• New frosted-glass background and UI on the home screen.\n• Improved drag-and-drop behavior with hint animations.\n• Updated the red-dot reminder when no output folder is selected.\n• Added English language support; switch in Settings → Language or follow system language.";
+"changelog.title" = "v1.6.27 Updates";
+"changelog.body" = "• Added \"Privacy Protector\" (Beta) with on-device auto-redaction and manual selection.\n• Improved UI styles and added animations.\n• Added \"EXIF Viewer\" to view image metadata.\n• Improved English localization texts.\n• On first launch, WenRemover will request access to the Downloads folder for quick saving. You can change this in settings.";
 "changelog.dismiss" = "Dismiss";
+"privacy.beta.title" = "Privacy Protector Beta";
+"privacy.beta.body" = "This is a Beta feature. All detections are performed on-device.\nIf there are missed detections or errors, you can click the bounding boxes to remove them and use manual selection.";
+"privacy.beta.dismiss" = "Dismiss";
 
 "notice.defaultTitle" = "Notice";
 "notice.dismiss" = "Dismiss";
-"notice.action" = "View details";
+"notice.action" = "View Details";
 
 /* Developer Settings */
 "settings.network.section" = "Network";
-"settings.notice.disable" = "Disable notices";
-"settings.notice.disable.note" = "When turned off, announcements and special notices will no longer be shown.";
-"settings.dev.section" = "Develop";
+"settings.notice.disable" = "Disable Notices";
+"settings.notice.disable.note" = "Stop showing announcements and notices.";
+"settings.general.section" = "General";
+"settings.dev.section" = "Developer";
 "settings.dev.options" = "Options";
-"settings.dev.alwaysShowChangelog" = "Always show changelog";
-"settings.dev.alwaysShowChangelog.note" = "When enabled, the changelog will remain visible.";
+"settings.dev.alwaysShowChangelog" = "Always Show Prompts";
+"settings.dev.alwaysShowChangelog.note" = "Always show changelog and first-time prompts.";
+"settings.notice.reset" = "Reset Prompts";
+"settings.notice.reset.note" = "Restore first-time prompts for all pages.";
 "settings.output.section" = "Output Settings";
-"settings.output.reset" = "Restore default output settings";
-"settings.output.reset.note" = "Restore default output settings. To customize output settings, open Home → \"Output Settings\".";
+"settings.output.reset" = "Reset Output Settings";
+"settings.output.reset.note" = "Restore default output settings. To customize, go to Home → Output Settings.";
 "settings.appearance.section" = "Appearance";
 "settings.appearance.header" = "Appearance";
-"settings.appearance.footer" = "Choose the app's appearance.";
+"settings.appearance.footer" = "Choose the app's theme.";
 "appearance.light" = "Light";
 "appearance.dark" = "Dark";
-"appearance.system" = "Follow System";
-"appearance.theme" = "Appearance Settings";
+"appearance.system" = "System";
+"appearance.theme" = "Theme Settings";
 
 "settings.language.section" = "Language";
 "settings.language.label" = "App Language";
@@ -82,19 +91,63 @@
 "settings.language.english" = "English";
 "settings.language.chinese" = "Simplified Chinese";
 
-/* Placeholder helper for language row (editable later) */
 "settings.language.helper.text" = "Help us improve documentation and translations.";
 "settings.language.helper.linkText" = "Learn more";
 "settings.language.helper.url" = "https://wenlei.top/wenremover-feedback";
 
 "settings.window.title" = "WenRemover Settings";
 
-/* Panel prompts */
 "panel.choose" = "Choose";
 "panel.add" = "Add";
 
-/* ImageStripper errors */
 "error.invalidImage" = "Unable to read image.";
-"error.cannotCreateDestination" = "Cannot create output file.";
+"error.cannotCreateDestination" = "Cannot create output file. (Error 1)";
 "error.cannotWrite" = "Write failed.";
-"error.skippedByRule" = "A file with the same name already exists and the rule is set to Skip.";
+"error.skippedByRule" = "File already exists and rule is set to Skip.";
+
+"tab.exif" = "Remove EXIF";
+"tab.privacy" = "Privacy Protector";
+"privacy.title" = "Privacy Protector (BETA)";
+"privacy.subtitle" = "Auto-detect and redact faces, text, and QR codes.";
+"privacy.status.loaded" = "Image loaded.";
+"privacy.status.detecting" = "Detecting privacy regions...";
+"privacy.status.noRegions" = "No privacy regions found.";
+"privacy.status.review %lld" = "Found %lld regions. Please review.";
+"privacy.status.items %lld" = "%lld images in queue. Please review.";
+"privacy.status.rendering" = "Applying filters...";
+"privacy.status.exported" = "Exported successfully.";
+"privacy.intensity.light" = "Light";
+"privacy.intensity.medium" = "Medium";
+"privacy.intensity.heavy" = "Heavy";
+"privacy.intensity.label" = "Intensity";
+"privacy.button.drawMode" = "Draw";
+"privacy.button.detect" = "Detect";
+"privacy.button.export" = "Redact & Export";
+"privacy.button.exportAll" = "Redact & Export";
+
+"permission.alert.title" = "Folder Access Required";
+"permission.alert.message" = "You denied access to the Downloads folder. Please select an output directory manually or grant permission in System Settings.";
+"permission.alert.button" = "OK";
+
+"settings.permission.section" = "Permissions";
+"settings.permission.manage" = "Manage Folder Access";
+"settings.permission.note" = "Allow or revoke app's file access in System Settings.";
+
+"button.info" = "Info";
+"exif.info.title" = "Image Info";
+"exif.make" = "Camera Maker";
+"exif.model" = "Camera Model";
+"exif.lens" = "Lens Model";
+"exif.datetime" = "Date Time";
+"exif.focalLength" = "Focal Length";
+"exif.colorProfile" = "Color Profile";
+"exif.colorDepth" = "Color Depth";
+"exif.aperture" = "Aperture";
+"exif.exposureTime" = "Exposure Time";
+"exif.iso" = "ISO Speed";
+"exif.location" = "Location";
+"exif.noLocation" = "No GPS Info";
+
+"tab.exifViewer" = "EXIF Viewer";
+"exifviewer.subtitle" = "View image metadata and capture location.";
+"button.nextImage" = "Next";

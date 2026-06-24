@@ -9,9 +9,12 @@ struct SettingsView: View {
     // Store appearance preference as raw Int (0 = system, 1 = light, 2 = dark)
     @AppStorage("appearancePreference") private var appearancePreferenceRaw: Int = 0
     @AppStorage("languagePreference") private var languagePreference: String = "system"
+    @AppStorage("hasSeenChangelogBanner") private var hasSeenChangelogBanner = false
+    @AppStorage("hasSeenPrivacyBetaBanner") private var hasSeenPrivacyBetaBanner = false
 
     @State private var isDeveloperOptionsExpanded = false
     @State private var showResetConfirmation = false
+    @State private var showNoticeResetConfirmation = false
 
     var body: some View {
         ZStack {
@@ -55,6 +58,29 @@ struct SettingsView: View {
                             }
                             .buttonStyle(.plain)
                         }
+                    }
+
+                    // Section: General
+                    VStack(alignment: .leading, spacing: 12) {
+                        Label(LocalizedStringKey("settings.general.section"), systemImage: "gearshape")
+                            .font(.headline)
+                            .foregroundStyle(.primary)
+
+                        HStack(spacing: 8) {
+                            Button {
+                                resetAllNotices()
+                            } label: {
+                                Text(LocalizedStringKey("settings.notice.reset"))
+                            }
+                            if showNoticeResetConfirmation {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundStyle(.green)
+                                    .transition(.scale.combined(with: .opacity))
+                            }
+                        }
+                        Text(LocalizedStringKey("settings.notice.reset.note"))
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
                     }
 
                     // Section: Output
@@ -116,6 +142,25 @@ struct SettingsView: View {
                             .foregroundStyle(.secondary)
                     }
 
+                    // Section: Permissions
+                    VStack(alignment: .leading, spacing: 12) {
+                        Label(LocalizedStringKey("settings.permission.section"), systemImage: "hand.raised")
+                            .font(.headline)
+                            .foregroundStyle(.primary)
+
+                        Button(action: {
+                            if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_FilesAndFolders") {
+                                NSWorkspace.shared.open(url)
+                            }
+                        }) {
+                            Text(LocalizedStringKey("settings.permission.manage"))
+                        }
+
+                        Text(LocalizedStringKey("settings.permission.note"))
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+
                     // Section: Developer
                     VStack(alignment: .leading, spacing: 12) {
                         Label(LocalizedStringKey("settings.dev.section"), systemImage: "wrench.and.screwdriver")
@@ -131,6 +176,38 @@ struct SettingsView: View {
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                                     .padding(.leading, 24)
+                                
+                                Divider().padding(.vertical, 8)
+                                
+                                Text("Device Capability (Core ML Ready)")
+                                    .font(.subheadline).bold()
+                                    .padding(.bottom, 4)
+                                
+                                let caps = DeviceCapability.current
+                                VStack(alignment: .leading, spacing: 6) {
+                                    HStack {
+                                        Text("Neural Engine:")
+                                        Spacer()
+                                        Text(caps.hasNeuralEngine ? "Available" : "Not Found")
+                                            .foregroundStyle(caps.hasNeuralEngine ? .green : .orange)
+                                    }
+                                    HStack {
+                                        Text("Physical Memory:")
+                                        Spacer()
+                                        Text("\(caps.memoryGB) GB")
+                                            .foregroundStyle(caps.memoryGB >= 8 ? .green : .orange)
+                                    }
+                                    HStack {
+                                        Text("Low Power Mode:")
+                                        Spacer()
+                                        Text(caps.isLowPower ? "Active" : "Inactive")
+                                            .foregroundStyle(caps.isLowPower ? .orange : .secondary)
+                                    }
+                                }
+                                .font(.caption)
+                                .padding(12)
+                                .background(.black.opacity(0.1))
+                                .cornerRadius(8)
                             }
                             .padding(.top, 4)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -207,6 +284,19 @@ struct SettingsView: View {
             }
         }
     }
+    
+    private func resetAllNotices() {
+        hasSeenChangelogBanner = false
+        hasSeenPrivacyBetaBanner = false
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+            showNoticeResetConfirmation = true
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
+            withAnimation(.easeOut(duration: 0.2)) {
+                showNoticeResetConfirmation = false
+            }
+        }
+    }
 }
 
 // Keep settings window translucent and disable full screen (match main view behavior)
@@ -229,4 +319,23 @@ fileprivate struct SettingsFullscreenDisabler: NSViewRepresentable {
 
 #Preview {
     SettingsView()
+}
+
+struct DeviceCapability {
+    let hasNeuralEngine: Bool
+    let memoryGB: Int
+    let isLowPower: Bool
+    
+    static var current: DeviceCapability {
+        let mem = Int(ProcessInfo.processInfo.physicalMemory / (1024 * 1024 * 1024))
+        let lowPower = ProcessInfo.processInfo.isLowPowerModeEnabled
+        
+        #if arch(arm64)
+        let hasNE = true // All Apple Silicon Macs have a Neural Engine
+        #else
+        let hasNE = false
+        #endif
+        
+        return DeviceCapability(hasNeuralEngine: hasNE, memoryGB: mem, isLowPower: lowPower)
+    }
 }
