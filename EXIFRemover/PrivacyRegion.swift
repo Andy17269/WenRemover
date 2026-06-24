@@ -19,7 +19,7 @@ enum PrivacyType: String, CaseIterable {
 
 struct PrivacyRegion: Identifiable, Equatable {
     let id: UUID
-    var boundingBox: CGRect // Normalized [0, 1], Vision coordinate system (origin bottom-left)
+    var boundingBox: CGRect // 归一化坐标
     var type: PrivacyType
     
     init(id: UUID = UUID(), boundingBox: CGRect, type: PrivacyType) {

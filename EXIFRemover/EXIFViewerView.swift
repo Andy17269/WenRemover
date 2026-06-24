@@ -8,7 +8,6 @@ struct EXIFViewerView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Header
             HStack {
                 VStack(alignment: .leading, spacing: 8) {
                     Text(LocalizedStringKey("tab.exifViewer"))
@@ -54,9 +53,7 @@ struct EXIFViewerView: View {
             Divider()
             
             if let url = imageURL, let data = exifData {
-                // Split View Layout
                 HSplitView {
-                    // Left: Image Preview
                     VStack {
                         if let nsImage = NSImage(contentsOf: url) {
                             Image(nsImage: nsImage)
@@ -71,7 +68,6 @@ struct EXIFViewerView: View {
                     }
                     .frame(minWidth: 200, maxWidth: .infinity, minHeight: 200, maxHeight: .infinity)
                     
-                    // Right: EXIF Info
                     EXIFInfoView(url: url, data: data)
                         .background(Color.clear)
                         .frame(width: 350)
@@ -81,7 +77,6 @@ struct EXIFViewerView: View {
                     handleDrop(providers: providers)
                 }
             } else {
-                // Empty Drop Zone
                 VStack(spacing: 12) {
                     Image(systemName: "photo.on.rectangle.angled")
                         .font(.system(size: 48))

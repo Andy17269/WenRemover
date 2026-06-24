@@ -39,7 +39,6 @@ struct PrivacyProtectorView: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            // Header
             VStack(alignment: .leading, spacing: 8) {
                 Text(LocalizedStringKey("privacy.title"))
                     .font(.largeTitle)
@@ -76,7 +75,6 @@ struct PrivacyProtectorView: View {
         }
         .padding(20)
         .ignoresSafeArea()
-        // .background(.regularMaterial) removed here, applied in ContentView
         .sheet(isPresented: $showOutputSettings) {
             OutputSettingsView(configuration: outputConfiguration, blurIntensity: $viewModel.blurIntensity) { newConfiguration in
                 let normalized = newConfiguration.normalized()
@@ -216,7 +214,7 @@ struct PrivacyProtectorView: View {
                                         withAnimation(.easeOut(duration: 0.3)) {
                                             dragOffset = CGSize(width: direction * 500, height: value.translation.height)
                                         }
-                                        let keep = direction > 0 // Right = Keep/Next, Left = Remove
+                                        let keep = direction > 0 // 右滑保留，左滑移除
                                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                                             viewModel.popItem(id: item.id, keep: keep)
                                             dragOffset = .zero
@@ -232,7 +230,6 @@ struct PrivacyProtectorView: View {
                 }
             }
             
-            // Navigation Controls
             if viewModel.items.count > 1 {
                 HStack {
                     Button(action: {
@@ -270,7 +267,6 @@ struct PrivacyProtectorView: View {
                 .padding(.horizontal, 20)
                 .zIndex(50)
                 
-                // Keyboard shortcut for delete
                 Button(action: {
                     if viewModel.currentIndex < viewModel.items.count {
                         let item = viewModel.items[viewModel.currentIndex]
@@ -281,7 +277,6 @@ struct PrivacyProtectorView: View {
                 .opacity(0)
             }
             
-            // Badge counter
             if viewModel.items.count > 1 {
                 VStack {
                     HStack {
@@ -316,9 +311,7 @@ struct PrivacyProtectorView: View {
     
     private var controlBar: some View {
         VStack(spacing: 12) {
-            // Top Row: List Management, Modes & Settings
             HStack(spacing: 16) {
-                // Clear List Button
                 Button {
                     viewModel.clearImages()
                 } label: {
@@ -345,7 +338,6 @@ struct PrivacyProtectorView: View {
                 Spacer()
                 
                 HStack(spacing: 12) {
-                    // Draw Mode Toggle
                     Toggle(isOn: $isDrawingMode) {
                         Label(LocalizedStringKey("privacy.button.drawMode"), systemImage: "paintbrush.pointed")
                     }
@@ -362,7 +354,6 @@ struct PrivacyProtectorView: View {
                     .disabled(viewModel.state == .idle || viewModel.state == .rendering)
                     .opacity(viewModel.state == .idle || viewModel.state == .rendering ? 0.5 : 1)
     
-                    // Output Settings Button
                     Button {
                         showOutputSettings = true
                     } label: {
@@ -387,7 +378,6 @@ struct PrivacyProtectorView: View {
                     .disabled(viewModel.state == .rendering)
                     .opacity(viewModel.state == .rendering ? 0.5 : 1)
 
-                    // Choose Output Folder Button
                     Button {
                         chooseOutputFolder()
                     } label: {
@@ -423,11 +413,9 @@ struct PrivacyProtectorView: View {
                 }
             }
             
-            // Bottom Row: Copy to Clipboard & Export
             HStack(spacing: 12) {
                 Spacer()
                 
-                // Action Bar
                 if viewModel.items.count == 1 {
                     Button {
                         viewModel.copySingleImageToClipboard(configuration: outputConfiguration)
@@ -539,7 +527,6 @@ struct PrivacyProtectorView: View {
     
     private var fileList: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // Status bar header
             HStack {
                 Text(String.localizedStringWithFormat(localizedString("selected.count %lld"), viewModel.items.count))
                     .font(.subheadline.weight(.medium))

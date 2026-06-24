@@ -10,7 +10,7 @@ struct PrivacyImageItem: Identifiable, Equatable {
     var selectedRegionIDs: Set<UUID> = []
     var isDetecting: Bool = false
     var detectionError: String? = nil
-    var exportProgress: Double = 0.0 // optional for UI
+    var exportProgress: Double = 0.0 // UI用
 
     static func == (lhs: PrivacyImageItem, rhs: PrivacyImageItem) -> Bool {
         lhs.id == rhs.id &&

@@ -10,7 +10,6 @@ struct EXIFRemoverApp: App {
         return url
     }()
 
-    // Observe the stored appearance preference (raw Int). Use raw Int to avoid cross-file symbol resolution issues.
     @AppStorage("appearancePreference") private var appearancePreferenceRaw: Int = 0
     @AppStorage("languagePreference") private var languagePreference: String = "system"
 
@@ -21,7 +20,6 @@ struct EXIFRemoverApp: App {
                 .onAppear {
                     NSApp.appearance = Self.nsAppearance(for: appearancePreferenceRaw)
                     updateSettingsWindowTitle()
-                    // Ensure main window defaults to min size on launch
                     setMainWindowToMinSize()
                 }
                 .onChange(of: appearancePreferenceRaw) { _, newValue in
@@ -29,7 +27,6 @@ struct EXIFRemoverApp: App {
                 }
                 .onChange(of: languagePreference) { _, _ in
                     updateSettingsWindowTitle()
-                    // When language changes, adjust default size (min width may differ per language)
                     setMainWindowToMinSize()
                 }
         }
@@ -62,7 +59,6 @@ struct EXIFRemoverApp: App {
     private var minWindowWidth: CGFloat {
         if languagePreference == "en" { return 820 }
         if languagePreference == "zh-Hans" { return 780 }
-        // System fallback
         let lang = Locale.current.language.languageCode?.identifier ?? "en"
         return lang.contains("zh") ? 780 : 820
     }
@@ -72,7 +68,6 @@ struct EXIFRemoverApp: App {
     private func setMainWindowToMinSize() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
             let appTitleLower = localizedString("app.title").lowercased()
-            // Try find the main app window by title match first, otherwise fall back to keyWindow
             var targetWindow: NSWindow? = nil
             for window in NSApp.windows {
                 guard window.styleMask.contains(.titled) else { continue }
@@ -88,10 +83,8 @@ struct EXIFRemoverApp: App {
 
             let targetSize = NSSize(width: minWindowWidth, height: minWindowHeight)
 
-            // Set minimum size to prevent shrinking below designed layout
             window.minSize = targetSize
 
-            // Compute centered frame on the window's screen or main screen
             let screen = window.screen ?? NSScreen.main
             if let visible = screen?.visibleFrame {
                 let originX = visible.origin.x + (visible.size.width - targetSize.width) / 2.0
@@ -99,7 +92,6 @@ struct EXIFRemoverApp: App {
                 let targetFrame = NSRect(x: originX, y: originY, width: targetSize.width, height: targetSize.height)
                 window.setFrame(targetFrame, display: true, animate: false)
             } else {
-                // Fallback: resize without reposition
                 var frame = window.frame
                 frame.size = targetSize
                 window.setFrame(frame, display: true, animate: false)
@@ -126,10 +118,6 @@ struct EXIFRemoverApp: App {
                 guard window.styleMask.contains(.titled) else { continue }
                 let lower = window.title.lowercased()
                 let width = window.frame.size.width
-                // Only update windows that look like the Settings window:
-                // - title already contains "settings"/"设置" (likely the settings window)
-                // - OR window width roughly matches the settings view width
-                // Never override the main app window whose title equals the app title.
                 let isSettingsLike = lower.contains("settings") || lower.contains("设置") || (abs(width - 480) < 40)
                 let isAppWindow = lower == appTitleLower
                 if isSettingsLike && !isAppWindow {

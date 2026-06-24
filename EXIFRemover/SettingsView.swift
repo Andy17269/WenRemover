@@ -6,7 +6,6 @@ struct SettingsView: View {
     @AppStorage("disableOnlineNotice") private var disableOnlineNotice = false
     @AppStorage("outputSuffix") private var storedOutputSuffix = "_clean"
     @AppStorage("outputConflictRule") private var storedOutputConflictRule = OutputConflictRule.appendIndex.rawValue
-    // Store appearance preference as raw Int (0 = system, 1 = light, 2 = dark)
     @AppStorage("appearancePreference") private var appearancePreferenceRaw: Int = 0
     @AppStorage("languagePreference") private var languagePreference: String = "system"
     @AppStorage("hasSeenChangelogBanner") private var hasSeenChangelogBanner = false
@@ -18,14 +17,12 @@ struct SettingsView: View {
 
     var body: some View {
         ZStack {
-            // Vibrant material background, same as main ContentView
             Rectangle()
                 .fill(.regularMaterial)
                 .ignoresSafeArea()
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 32) {
-                    // Section: Language
                     VStack(alignment: .leading, spacing: 12) {
                         Label(LocalizedStringKey("settings.language.section"), systemImage: "globe")
                             .font(.headline)
@@ -39,7 +36,6 @@ struct SettingsView: View {
                             Text(LocalizedStringKey("settings.language.label"))
                         }
 
-                        // Placeholder helper: localized text + tappable link
                         HStack(spacing: 6) {
                             Text(LocalizedStringKey("settings.language.helper.text"))
                                 .font(.subheadline)
@@ -60,7 +56,6 @@ struct SettingsView: View {
                         }
                     }
 
-                    // Section: General
                     VStack(alignment: .leading, spacing: 12) {
                         Label(LocalizedStringKey("settings.general.section"), systemImage: "gearshape")
                             .font(.headline)
@@ -83,7 +78,6 @@ struct SettingsView: View {
                             .foregroundStyle(.secondary)
                     }
 
-                    // Section: Output
                     VStack(alignment: .leading, spacing: 12) {
                         Label(LocalizedStringKey("settings.output.section"), systemImage: "slider.horizontal.3")
                             .font(.headline)
@@ -108,7 +102,6 @@ struct SettingsView: View {
                             .foregroundStyle(.secondary)
                     }
 
-                    // Section: Network
                     VStack(alignment: .leading, spacing: 12) {
                         Label(LocalizedStringKey("settings.network.section"), systemImage: "network")
                             .font(.headline)
@@ -123,7 +116,6 @@ struct SettingsView: View {
                             .foregroundStyle(.secondary)
                     }
 
-                    // Section: Appearance
                     VStack(alignment: .leading, spacing: 12) {
                         Label(LocalizedStringKey("settings.appearance.section"), systemImage: "moon.stars")
                             .font(.headline)
@@ -142,7 +134,6 @@ struct SettingsView: View {
                             .foregroundStyle(.secondary)
                     }
 
-                    // Section: Permissions
                     VStack(alignment: .leading, spacing: 12) {
                         Label(LocalizedStringKey("settings.permission.section"), systemImage: "hand.raised")
                             .font(.headline)
@@ -161,7 +152,6 @@ struct SettingsView: View {
                             .foregroundStyle(.secondary)
                     }
 
-                    // Section: Developer
                     VStack(alignment: .leading, spacing: 12) {
                         Label(LocalizedStringKey("settings.dev.section"), systemImage: "wrench.and.screwdriver")
                             .font(.headline)
@@ -245,11 +235,9 @@ struct SettingsView: View {
     private func updateWindowTitle() {
         DispatchQueue.main.async {
             let title = localizedString("settings.window.title")
-            // Try keyWindow first
             if let window = NSApp.keyWindow {
                 window.title = title
             }
-            // Also apply to any likely Settings window by matching width and being titled
             for window in NSApp.windows {
                 if window.styleMask.contains(.titled) {
                     let width = window.frame.size.width
@@ -299,7 +287,7 @@ struct SettingsView: View {
     }
 }
 
-// Keep settings window translucent and disable full screen (match main view behavior)
+// 窗口半透明+禁全屏
 fileprivate struct SettingsFullscreenDisabler: NSViewRepresentable {
     func makeNSView(context: Context) -> NSView {
         let view = NSView()
@@ -331,7 +319,7 @@ struct DeviceCapability {
         let lowPower = ProcessInfo.processInfo.isLowPowerModeEnabled
         
         #if arch(arm64)
-        let hasNE = true // All Apple Silicon Macs have a Neural Engine
+        let hasNE = true // M系列芯片标配 ANE
         #else
         let hasNE = false
         #endif

@@ -15,7 +15,7 @@ struct EXIFRemoverView: View {
     @State private var tempPhotoURLs: Set<URL> = []
     @State private var isPhotoPickerPresented = false
     @State private var showOutputSettings = false
-    @State private var showSuccessCheck = false // New state for success animation
+    @State private var showSuccessCheck = false
     @State private var showChangelogBanner = false
     @State private var noticeBanner: NoticeBanner?
     @State private var showNoticeBanner = false
@@ -41,30 +41,24 @@ struct EXIFRemoverView: View {
     private var minWindowWidth: CGFloat {
         if languagePreference == "en" { return 820 }
         if languagePreference == "zh-Hans" { return 780 }
-        // System fallback
         let lang = Locale.current.language.languageCode?.identifier ?? "en"
         return lang.contains("zh") ? 780 : 820
     }
 
     var body: some View {
         VStack(spacing: 16) {
-            // Header and Banners grouped with less spacing
             VStack(alignment: .leading, spacing: 10) {
-                // Header: large title + subtitle + tutorial link; info button at top-right
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 8) {
-                        // Large, bold title for macOS modern feel
                         Text(LocalizedStringKey("app.title"))
                             .font(.largeTitle)
                             .bold()
 
-                        // Description under the title with lower emphasis
                         Text(LocalizedStringKey("app.subtitle"))
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                             .fixedSize(horizontal: false, vertical: true)
 
-                        // Tutorial / help link kept as-is
                         Link(LocalizedStringKey("tutorial.link"), destination: tutorialURL)
                             .font(.callout)
                             .foregroundColor(.accentColor)
@@ -72,7 +66,6 @@ struct EXIFRemoverView: View {
 
                     Spacer()
 
-                    // Info button stays at top-right; aligned with the header top
                     Button {
                         showInfo = true
                     } label: {
@@ -113,7 +106,6 @@ struct EXIFRemoverView: View {
         }
         .padding(20)
         .frame(minWidth: minWindowWidth, idealWidth: minWindowWidth, minHeight: 680, idealHeight: 760)
-        // .background(.regularMaterial) removed here, applied in ContentView
         .background(FullscreenDisabler())
         .ignoresSafeArea()
         .onAppear {
@@ -151,8 +143,6 @@ struct EXIFRemoverView: View {
 
     private var controlBar: some View {
         HStack(spacing: 16) {
-            // Group 1: Left - Input
-            // 1. Add Files Menu (Consolidated)
             Menu {
                 Button {
                     chooseInputFiles()
@@ -189,9 +179,7 @@ struct EXIFRemoverView: View {
 
             Spacer()
 
-            // Group 2: Right - Settings, Output & Action
             HStack(spacing: 12) {
-                // 2. Settings Button
                 Button {
                     showOutputSettings = true
                 } label: {
@@ -215,7 +203,6 @@ struct EXIFRemoverView: View {
                 .help(LocalizedStringKey("help.outputSettings"))
                 .disabled(isProcessing)
 
-                // 3. Choose Output Folder Button
                 Button {
                     chooseOutputFolder()
                 } label: {
@@ -249,7 +236,6 @@ struct EXIFRemoverView: View {
                 }
                 .help(LocalizedStringKey("button.chooseOutput"))
 
-                // 4. Remove EXIF Button (Primary Capsule)
                 Button {
                     processImages()
                 } label: {
@@ -381,7 +367,6 @@ struct EXIFRemoverView: View {
 
     private var fileList: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // Status bar header
             HStack {
                 Text(String.localizedStringWithFormat(localizedString("selected.count %lld"), imageURLs.count))
                     .font(.subheadline.weight(.medium))
@@ -597,14 +582,12 @@ struct EXIFRemoverView: View {
             await MainActor.run {
                 isProcessing = false
                 
-                // Trigger success animation
                 withAnimation {
                     showSuccessCheck = true
                 }
                 
-                // Hide success check after delay
                 Task {
-                    try? await Task.sleep(nanoseconds: 2_000_000_000) // 2 seconds
+                    try? await Task.sleep(nanoseconds: 2_000_000_000)
                     await MainActor.run {
                         withAnimation {
                             showSuccessCheck = false
@@ -642,7 +625,7 @@ struct EXIFRemoverView: View {
             noticeBanner = banner
             showNoticeBanner = shouldShowNoticeBanner(for: banner)
         } catch {
-            // Silently ignore network errors.
+        } catch {
         }
     }
 
@@ -707,7 +690,6 @@ struct EXIFRemoverView: View {
     }
 
     private func localizedString(_ key: String) -> String {
-        // If using system, fall back to default NSLocalizedString behavior
         if languagePreference == "system" {
             return NSLocalizedString(key, comment: "")
         }
@@ -928,7 +910,6 @@ struct OutputSettingsView: View {
 
     var body: some View {
         ZStack {
-            // Match main view's material background
             Rectangle()
                 .fill(.regularMaterial)
                 .ignoresSafeArea()

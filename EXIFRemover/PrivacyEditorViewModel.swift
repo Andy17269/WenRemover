@@ -96,9 +96,7 @@ class PrivacyEditorViewModel: ObservableObject {
     
     func detectPrivacy() {
         Task {
-            // Process sequentially
             for i in 0..<items.count {
-                // Must fetch current item in case items array changes
                 guard i < items.count else { break }
                 let item = items[i]
                 guard !item.isDetecting, item.detectedRegions.isEmpty, item.detectionError == nil else { continue }
@@ -128,7 +126,6 @@ class PrivacyEditorViewModel: ObservableObject {
                 do {
                     let regions = try await detector.detect(in: detectImage)
                     await MainActor.run {
-                        // Re-check index since items might have been removed via swiping
                         if let actualIndex = items.firstIndex(where: { $0.id == item.id }) {
                             items[actualIndex].detectedRegions = regions
                             items[actualIndex].selectedRegionIDs = Set(regions.map { $0.id })
@@ -251,7 +248,7 @@ class PrivacyEditorViewModel: ObservableObject {
                     case .skip:
                         let candidate = candidateURL(index: nil)
                         guard !fileManager.fileExists(atPath: candidate.path) else {
-                            continue // Skip this image
+                            continue // 跳过
                         }
                         outputURL = candidate
                     }

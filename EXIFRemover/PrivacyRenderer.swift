@@ -27,11 +27,10 @@ class PrivacyRenderer {
         let ciImage = CIImage(cgImage: cgImage)
         let imageSize = ciImage.extent.size
         
-        // Base image
         var finalImage = ciImage
         
         for region in regions {
-            // Convert normalized coordinates (origin bottom-left) to absolute coordinates
+            // 转为绝对坐标
             let rect = CGRect(
                 x: region.boundingBox.origin.x * imageSize.width,
                 y: region.boundingBox.origin.y * imageSize.height,
@@ -39,23 +38,19 @@ class PrivacyRenderer {
                 height: region.boundingBox.height * imageSize.height
             )
             
-            // Inflate rect slightly to ensure full coverage
+            // 稍微扩大防漏
             let expandedRect = rect.insetBy(dx: -5, dy: -5)
             
-            // Create a mask for this region
-            // Since CoreImage origin is bottom-left, rect matches CI coordinates.
             let maskImage = CIFilter(name: "CIConstantColorGenerator")!
             maskImage.setValue(CIColor(red: 1, green: 1, blue: 1), forKey: kCIInputColorKey)
             let mask = maskImage.outputImage!.cropped(to: expandedRect)
             
-            // Pixellate filter
             let pixellate = CIFilter.pixellate()
             pixellate.inputImage = finalImage
             pixellate.scale = intensity.scale
             
             guard let pixellated = pixellate.outputImage else { continue }
             
-            // Blend with mask
             let blend = CIFilter.blendWithMask()
             blend.inputImage = pixellated
             blend.backgroundImage = finalImage
@@ -79,7 +74,7 @@ class PrivacyRenderer {
             throw RenderError.cannotCreateDestination
         }
         
-        // This naturally drops EXIF metadata as we are not copying properties from the original image source
+        // 不带元数据重写以清除 EXIF
         var options: [CFString: Any] = [:]
         if destinationType == UTType.jpeg.identifier as CFString {
             options[kCGImageDestinationLossyCompressionQuality] = 1.0

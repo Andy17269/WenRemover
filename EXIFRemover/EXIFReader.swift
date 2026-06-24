@@ -31,17 +31,17 @@ class EXIFReader {
         
         var exifData = EXIFData()
         
-        // Root properties (Color Profile, Depth)
+        // 颜色和色深
         exifData.colorProfile = properties[kCGImagePropertyProfileName as String] as? String
         exifData.colorDepth = properties[kCGImagePropertyDepth as String] as? Int
         
-        // General TIFF Info (Make, Model)
+        // 厂商和型号
         if let tiffDict = properties[kCGImagePropertyTIFFDictionary as String] as? [String: Any] {
             exifData.make = tiffDict[kCGImagePropertyTIFFMake as String] as? String
             exifData.model = tiffDict[kCGImagePropertyTIFFModel as String] as? String
         }
         
-        // EXIF Dictionary
+        // EXIF
         if let exifDict = properties[kCGImagePropertyExifDictionary as String] as? [String: Any] {
             exifData.lensModel = exifDict[kCGImagePropertyExifLensModel as String] as? String
             exifData.fNumber = exifDict[kCGImagePropertyExifFNumber as String] as? Double
@@ -51,7 +51,7 @@ class EXIFReader {
             exifData.dateTimeOriginal = exifDict[kCGImagePropertyExifDateTimeOriginal as String] as? String
         }
         
-        // GPS Dictionary
+        // GPS
         if let gpsDict = properties[kCGImagePropertyGPSDictionary as String] as? [String: Any] {
             if let lat = gpsDict[kCGImagePropertyGPSLatitude as String] as? Double,
                let lon = gpsDict[kCGImagePropertyGPSLongitude as String] as? Double {

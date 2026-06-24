@@ -3,11 +3,11 @@ require 'xcodeproj'
 project_path = 'EXIF Remover.xcodeproj'
 project = Xcodeproj::Project.open(project_path)
 
-# Find EXIFRemover group
+# 找分组
 group = project.main_group.find_subpath('EXIFRemover', false)
 target = project.targets.first
 
-# The files to add
+# 待加文件
 files_to_add = [
   'ContentView.swift',
   'EXIFRemoverView.swift',
@@ -24,17 +24,17 @@ files_to_add = [
 files_to_add.each do |file_name|
   file_path = "EXIFRemover/#{file_name}"
   
-  # Remove if it already exists to avoid duplicates
+  # 去重
   existing_ref = group.files.find { |f| f.path == file_name }
   if existing_ref
     target.source_build_phase.remove_file_reference(existing_ref)
     existing_ref.remove_from_project
   end
 
-  # Add file reference
+  # 加引用
   file_ref = group.new_file(file_name)
   
-  # Add to build phase
+  # 加到 build
   target.source_build_phase.add_file_reference(file_ref, true)
 end
 
