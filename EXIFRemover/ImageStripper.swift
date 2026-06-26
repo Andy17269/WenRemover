@@ -85,6 +85,14 @@ enum ImageStripper {
             outputURL = candidate
         }
 
+        try stripMetadata(inputURL: inputURL, outputURL: outputURL)
+        return outputURL
+    }
+
+    static func stripMetadata(inputURL: URL, outputURL: URL) throws {
+        let fileManager = FileManager.default
+        let ext = outputURL.pathExtension.isEmpty ? "jpg" : outputURL.pathExtension
+        
         guard let source = CGImageSourceCreateWithURL(inputURL as CFURL, nil) else {
             throw StripError.invalidImage
         }
@@ -110,8 +118,6 @@ enum ImageStripper {
             }
             throw StripError.cannotWrite
         }
-
-        return outputURL
     }
 
     enum StripError: LocalizedError {

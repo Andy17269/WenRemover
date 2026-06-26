@@ -1,14 +1,19 @@
 import Foundation
+#if os(macOS)
 import AppKit
+#else
+import UIKit
+#endif
 import CoreGraphics
 import UniformTypeIdentifiers
 import SwiftUI
+import Photos
 
 struct PrivacyImageItem: Identifiable, Equatable {
     let id = UUID()
     let url: URL
     let cgImage: CGImage
-    let nsImage: NSImage
+    let platformImage: PlatformImage
     var detectedRegions: [PrivacyRegion] = []
     var selectedRegionIDs: Set<UUID> = []
     var isDetecting: Bool = false
@@ -75,8 +80,12 @@ class PrivacyEditorViewModel: ObservableObject {
                 continue
             }
             
-            let nsImage = NSImage(cgImage: cgImage, size: NSZeroSize)
-            let item = PrivacyImageItem(url: url, cgImage: cgImage, nsImage: nsImage)
+            #if os(macOS)
+            let platformImage = NSImage(cgImage: cgImage, size: NSZeroSize)
+            #else
+            let platformImage = UIImage(cgImage: cgImage)
+            #endif
+            let item = PrivacyImageItem(url: url, cgImage: cgImage, platformImage: platformImage)
             self.items.append(item)
         }
         
@@ -198,7 +207,11 @@ class PrivacyEditorViewModel: ObservableObject {
     }
     
     func exportAllImages(configuration: OutputConfiguration) {
+        #if os(macOS)
         guard !items.isEmpty, let outputFolder = outputFolder else { return }
+        #else
+        guard !items.isEmpty else { return }
+        #endif
         
         state = .rendering
         statusMessage = localizedString("privacy.status.rendering")
@@ -214,6 +227,7 @@ class PrivacyEditorViewModel: ObservableObject {
                     let regionsToRender = item.detectedRegions.filter { item.selectedRegionIDs.contains($0.id) }
                     let finalCGImage = try PrivacyRenderer.render(cgImage: cgImage, regions: regionsToRender, intensity: intensity)
                     
+                    #if os(macOS)
                     let ext = url.pathExtension.isEmpty ? "jpg" : url.pathExtension
                     let baseName = url.deletingPathExtension().lastPathComponent
                     let suffix = configuration.sanitizedSuffix
@@ -254,6 +268,16 @@ class PrivacyEditorViewModel: ObservableObject {
                     }
                     
                     try PrivacyRenderer.export(cgImage: finalCGImage, to: outputURL)
+                    #else
+                    let ext = url.pathExtension.isEmpty ? "jpg" : url.pathExtension
+                    let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString).appendingPathExtension(ext)
+                    try PrivacyRenderer.export(cgImage: finalCGImage, to: tempURL)
+                    _ = await PHPhotoLibrary.requestAuthorization(for: .addOnly)
+                    try await PHPhotoLibrary.shared().performChanges {
+                        PHAssetCreationRequest.creationRequestForAssetFromImage(atFileURL: tempURL)
+                    }
+                    try? FileManager.default.removeItem(at: tempURL)
+                    #endif
                 }
                 
                 await MainActor.run {
@@ -287,6 +311,7 @@ class PrivacyEditorViewModel: ObservableObject {
                 
                 try PrivacyRenderer.export(cgImage: finalCGImage, to: tempURL)
                 
+                #if os(macOS)
                 if let image = NSImage(contentsOf: tempURL) {
                     await MainActor.run {
                         let pb = NSPasteboard.general
@@ -299,6 +324,15 @@ class PrivacyEditorViewModel: ObservableObject {
                         self.statusMessage = self.localizedString("status.copiedToClipboard")
                     }
                 }
+                #else
+                if let image = UIImage(contentsOfFile: tempURL.path) {
+                    await MainActor.run {
+                        UIPasteboard.general.image = image
+                        self.state = .exported
+                        self.statusMessage = self.localizedString("status.copiedToClipboard")
+                    }
+                }
+                #endif
             } catch {
                 await MainActor.run {
                     self.state = .error(error.localizedDescription)

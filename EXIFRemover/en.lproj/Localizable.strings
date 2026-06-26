@@ -1,7 +1,7 @@
 /* Application strings (English) */
 "app.title" = "WenRemover";
 "app.subtitle" = "Drag images below, select an output folder, and click \"Remove EXIF\".";
-"tutorial.link" = "Tutorial & Help";
+"tutorial.link" = "Tutorial & Help (Simplified Chinese)";
 "help.about" = "About";
 "menu.help" = "Help";
 
@@ -23,7 +23,7 @@
 
 "output.none" = "Not Selected";
 
-"dropzone.title" = "Drop images here";
+"dropzone.title" = "Drag / Click to Add";
 "dropzone.subtitle" = "Supports JPG / PNG / HEIC / TIFF files";
 
 "selected.count %lld" = "Selected %lld";
@@ -90,6 +90,9 @@
 "settings.language.system" = "System Default";
 "settings.language.english" = "English";
 "settings.language.chinese" = "Simplified Chinese";
+"settings.language.chinese_traditional" = "Traditional Chinese";
+"settings.language.japanese" = "Japanese";
+"settings.language.russian" = "Russian";
 
 "settings.language.helper.text" = "Help us improve documentation and translations.";
 "settings.language.helper.linkText" = "Learn more";
@@ -105,7 +108,7 @@
 "error.cannotWrite" = "Write failed.";
 "error.skippedByRule" = "File already exists and rule is set to Skip.";
 
-"tab.exif" = "Remove EXIF";
+"tab.exif" = "EXIF Cleaner";
 "tab.privacy" = "Privacy Protector";
 "privacy.title" = "Privacy Protector (BETA)";
 "privacy.subtitle" = "Auto-detect and redact faces, text, and QR codes.";
@@ -151,3 +154,43 @@
 "tab.exifViewer" = "EXIF Viewer";
 "exifviewer.subtitle" = "View image metadata and capture location.";
 "button.nextImage" = "Next";
+
+"settings.appearance.glassmorphism" = "Glassmorphism Background";
+
+"button.chooseImages" = "Select Images";
+"button.readClipboard" = "Read from Clipboard";
+
+/* EXIF Editor */
+"tab.exifEditor" = "EXIF Editor";
+"editor.filter.make" = "Filter: Make";
+"editor.filter.model" = "Filter: Model";
+"editor.selectFile" = "Select a file from the list";
+"editor.basic" = "Basic Info";
+"editor.make" = "Make";
+"editor.model" = "Model";
+"editor.date" = "Date Time";
+"editor.artist" = "Artist";
+"editor.copyright" = "Copyright";
+"editor.gps" = "GPS Location";
+"button.export" = "Export";
+"gps.setPinAtCenter" = "Set Pin at Center";
+"button.remove" = "Remove";
+"editor.mode.view" = "View Mode";
+"editor.mode.edit" = "Edit Mode";
+"button.copyEXIF" = "Copy All EXIF";
+"editor.unknown" = "Unknown";
+"editor.status.saved" = "Saved to %1$@";
+"editor.status.failed" = "Failed to save: %1$@";
+"editor.batch.rename" = "Batch Rename";
+"editor.batch.renameFormat" = "Format (e.g. {Year}-{Make})";
+"editor.batch.renameAndExport" = "Rename & Export";
+"editor.batch.varsDescription" = "Available variables: {Year}, {Month}, {Day}, {Camera}, {Model}";
+"editor.batch.timeShift" = "Batch Time Shift";
+"editor.batch.hoursToShift" = "Hours to shift:";
+"editor.batch.applyShift" = "Apply Shift";
+"editor.status.batchRenameCompleted" = "Batch Rename Completed";
+"editor.status.batchExportCompleted" = "Batch Export Completed";
+"button.startProcess" = "Start Process";
+"label.input" = "Input";
+"label.output" = "Output";
+"label.tools" = "Tools";

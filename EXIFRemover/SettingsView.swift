@@ -1,5 +1,9 @@
 import SwiftUI
+#if os(macOS)
 import AppKit
+#else
+import UIKit
+#endif
 
 struct SettingsView: View {
     @AppStorage("alwaysShowChangelogBanner") private var alwaysShowChangelogBanner = false
@@ -10,16 +14,30 @@ struct SettingsView: View {
     @AppStorage("languagePreference") private var languagePreference: String = "system"
     @AppStorage("hasSeenChangelogBanner") private var hasSeenChangelogBanner = false
     @AppStorage("hasSeenPrivacyBetaBanner") private var hasSeenPrivacyBetaBanner = false
+    @AppStorage("enableGlassmorphism") private var enableGlassmorphism = true
 
     @State private var isDeveloperOptionsExpanded = false
     @State private var showResetConfirmation = false
     @State private var showNoticeResetConfirmation = false
 
     var body: some View {
+        #if os(macOS)
+        macOSSettingsBody
+        #else
+        iOSSettingsBody
+        #endif
+    }
+
+    private var macOSSettingsBody: some View {
         ZStack {
-            Rectangle()
-                .fill(.regularMaterial)
-                .ignoresSafeArea()
+            Group {
+                if enableGlassmorphism {
+                    Rectangle().fill(.regularMaterial)
+                } else {
+                    Rectangle().fill(Color.windowBackground)
+                }
+            }
+            .ignoresSafeArea()
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 32) {
@@ -32,6 +50,9 @@ struct SettingsView: View {
                             Text(LocalizedStringKey("settings.language.system")).tag("system")
                             Text(LocalizedStringKey("settings.language.english")).tag("en")
                             Text(LocalizedStringKey("settings.language.chinese")).tag("zh-Hans")
+                            Text(LocalizedStringKey("settings.language.chinese_traditional")).tag("zh-Hant")
+                            Text(LocalizedStringKey("settings.language.japanese")).tag("ja")
+                            Text(LocalizedStringKey("settings.language.russian")).tag("ru")
                         } label: {
                             Text(LocalizedStringKey("settings.language.label"))
                         }
@@ -44,7 +65,11 @@ struct SettingsView: View {
                             Button(action: {
                                 let urlString = localizedString("settings.language.helper.url")
                                 if let url = URL(string: urlString) {
+                                    #if os(macOS)
                                     NSWorkspace.shared.open(url)
+                                    #else
+                                    UIApplication.shared.open(url)
+                                    #endif
                                 }
                             }) {
                                 Text(LocalizedStringKey("settings.language.helper.linkText"))
@@ -128,6 +153,10 @@ struct SettingsView: View {
                         } label: {
                             Text(LocalizedStringKey("appearance.theme"))
                         }
+                        
+                        Toggle(isOn: $enableGlassmorphism) {
+                            Text(LocalizedStringKey("settings.appearance.glassmorphism"))
+                        }
 
                         Text(LocalizedStringKey("settings.appearance.footer"))
                             .font(.subheadline)
@@ -141,7 +170,11 @@ struct SettingsView: View {
 
                         Button(action: {
                             if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_FilesAndFolders") {
+                                #if os(macOS)
                                 NSWorkspace.shared.open(url)
+                                #else
+                                UIApplication.shared.open(url)
+                                #endif
                             }
                         }) {
                             Text(LocalizedStringKey("settings.permission.manage"))
@@ -212,7 +245,151 @@ struct SettingsView: View {
         }
         .frame(width: 480)
         .frame(minHeight: 540)
+        #if os(macOS)
         .background(SettingsFullscreenDisabler())
+        #endif
+        .onAppear {
+            updateWindowTitle()
+        }
+        .onChange(of: languagePreference) { _, _ in
+            updateWindowTitle()
+        }
+    }
+    
+    private var iOSSettingsBody: some View {
+        Form {
+            Section {
+                Picker(selection: $languagePreference) {
+                    Text(LocalizedStringKey("settings.language.system")).tag("system")
+                    Text(LocalizedStringKey("settings.language.english")).tag("en")
+                    Text(LocalizedStringKey("settings.language.chinese")).tag("zh-Hans")
+                    Text(LocalizedStringKey("settings.language.chinese_traditional")).tag("zh-Hant")
+                    Text(LocalizedStringKey("settings.language.japanese")).tag("ja")
+                    Text(LocalizedStringKey("settings.language.russian")).tag("ru")
+                } label: {
+                    Text(LocalizedStringKey("settings.language.label"))
+                }
+                
+                Button(action: {
+                    let urlString = localizedString("settings.language.helper.url")
+                    if let url = URL(string: urlString) {
+                        #if os(macOS)
+                        NSWorkspace.shared.open(url)
+                        #else
+                        UIApplication.shared.open(url)
+                        #endif
+                    }
+                }) {
+                    Text(LocalizedStringKey("settings.language.helper.linkText"))
+                }
+            } header: {
+                Text(LocalizedStringKey("settings.language.section"))
+            } footer: {
+                Text(LocalizedStringKey("settings.language.helper.text"))
+            }
+            
+            Section {
+                Button {
+                    resetAllNotices()
+                } label: {
+                    HStack {
+                        Text(LocalizedStringKey("settings.notice.reset"))
+                        Spacer()
+                        if showNoticeResetConfirmation {
+                            Image(systemName: "checkmark")
+                                .foregroundStyle(.green)
+                        }
+                    }
+                }
+            } header: {
+                Text(LocalizedStringKey("settings.general.section"))
+            } footer: {
+                Text(LocalizedStringKey("settings.notice.reset.note"))
+            }
+            
+            Section {
+                Button {
+                    resetOutputSettings()
+                } label: {
+                    HStack {
+                        Text(LocalizedStringKey("settings.output.reset"))
+                        Spacer()
+                        if showResetConfirmation {
+                            Image(systemName: "checkmark")
+                                .foregroundStyle(.green)
+                        }
+                    }
+                }
+            } header: {
+                Text(LocalizedStringKey("settings.output.section"))
+            } footer: {
+                Text(LocalizedStringKey("settings.output.reset.note"))
+            }
+            
+            Section {
+                Toggle(isOn: $disableOnlineNotice) {
+                    Text(LocalizedStringKey("settings.notice.disable"))
+                }
+            } header: {
+                Text(LocalizedStringKey("settings.network.section"))
+            } footer: {
+                Text(LocalizedStringKey("settings.notice.disable.note"))
+            }
+            
+            Section {
+                Picker(selection: $appearancePreferenceRaw) {
+                    ForEach([0, 1, 2], id: \.self) { raw in
+                        Text(LocalizedStringKey(localizedKey(for: raw))).tag(raw)
+                    }
+                } label: {
+                    Text(LocalizedStringKey("appearance.theme"))
+                }
+                
+                Toggle(isOn: $enableGlassmorphism) {
+                    Text(LocalizedStringKey("settings.appearance.glassmorphism"))
+                }
+            } header: {
+                Text(LocalizedStringKey("settings.appearance.section"))
+            } footer: {
+                Text(LocalizedStringKey("settings.appearance.footer"))
+            }
+            
+            Section {
+                DisclosureGroup(isExpanded: $isDeveloperOptionsExpanded) {
+                    Toggle(isOn: $alwaysShowChangelogBanner) {
+                        Text(LocalizedStringKey("settings.dev.alwaysShowChangelog"))
+                    }
+                    
+                    let caps = DeviceCapability.current
+                    VStack(alignment: .leading, spacing: 6) {
+                        HStack {
+                            Text("Neural Engine:")
+                            Spacer()
+                            Text(caps.hasNeuralEngine ? "Available" : "Not Found")
+                                .foregroundStyle(caps.hasNeuralEngine ? .green : .orange)
+                        }
+                        HStack {
+                            Text("Physical Memory:")
+                            Spacer()
+                            Text("\(caps.memoryGB) GB")
+                                .foregroundStyle(caps.memoryGB >= 8 ? .green : .orange)
+                        }
+                        HStack {
+                            Text("Low Power Mode:")
+                            Spacer()
+                            Text(caps.isLowPower ? "Active" : "Inactive")
+                                .foregroundStyle(caps.isLowPower ? .orange : .secondary)
+                        }
+                    }
+                    .font(.caption)
+                    .padding(.vertical, 8)
+                } label: {
+                    Text(LocalizedStringKey("settings.dev.options"))
+                }
+            } header: {
+                Text(LocalizedStringKey("settings.dev.section"))
+            }
+        }
         .onAppear {
             updateWindowTitle()
         }
@@ -233,6 +410,7 @@ struct SettingsView: View {
     }
 
     private func updateWindowTitle() {
+        #if os(macOS)
         DispatchQueue.main.async {
             let title = localizedString("settings.window.title")
             if let window = NSApp.keyWindow {
@@ -247,6 +425,7 @@ struct SettingsView: View {
                 }
             }
         }
+        #endif
     }
 
     private func localizedKey(for raw: Int) -> String {
@@ -288,6 +467,7 @@ struct SettingsView: View {
 }
 
 // 窗口半透明+禁全屏
+#if os(macOS)
 fileprivate struct SettingsFullscreenDisabler: NSViewRepresentable {
     func makeNSView(context: Context) -> NSView {
         let view = NSView()
@@ -304,6 +484,7 @@ fileprivate struct SettingsFullscreenDisabler: NSViewRepresentable {
 
     func updateNSView(_ nsView: NSView, context: Context) {}
 }
+#endif
 
 #Preview {
     SettingsView()

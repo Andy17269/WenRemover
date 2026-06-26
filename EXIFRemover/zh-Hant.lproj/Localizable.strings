@@ -1,0 +1,192 @@
+/* 2026@AndyWen.
+ LOVE WITH CNS.
+ Sealed on June 24, 2026, Version 1.202.7.
+ */
+/* 首頁頭部 */
+"app.title" = "WenRemover";
+"app.subtitle" = "拖曳圖片到下方，選擇輸出目錄，點擊「移除 EXIF」即可。";
+"tutorial.link" = "使用教學 & 幫助（簡體中文）";
+"help.about" = "關於";
+"menu.help" = "幫助";
+/* 首頁按鈕 */
+"button.addFiles" = "加入";
+"menu.addFromFinder" = "從「Finder」加入";
+"button.addFromPhotos" = "從「照片」加入";
+"button.chooseOutput" = "輸出目錄";
+"button.removeExif" = "移除 EXIF";
+"button.removing" = "正在移除…";
+"button.clearList" = "清空";
+"button.clearAll" = "清空";
+"button.removeOne" = "刪除";
+"button.outputSettings" = "輸出設定";
+"button.cancel" = "取消";
+"button.saveChanges" = "儲存";
+"button.copyToClipboard" = "複製";
+"status.copiedToClipboard" = "已複製到剪貼簿";
+/* Tips */
+"output.none" = "未選擇";
+"dropzone.title" = "拖曳/點擊加入";
+"dropzone.subtitle" = "支援 JPG / PNG / HEIC / TIFF 等多種圖片檔案";
+/* 狀態 */
+"selected.count %lld" = "已選擇 %lld";
+"status.noneSupported" = "未識別到可處理的圖片。";
+"status.added %lld" = "已加入 %lld 張圖片。";
+"status.processing" = "處理中…";
+"status.done %lld %lld" = "完成，其中成功 %lld 張，失敗 %lld 張。";
+"status.doneDetailed %lld %lld %lld" = "完成，其中成功 %lld 張，失敗 %lld 張，跳過 %lld 張。";
+/* 小info */
+"info.title" = "WenRemover";
+"info.subtitle" = "一款 EXIF 小工具。";
+"info.supported" = "支援 EXIF 移除、智慧隱私打碼和 EXIF 元資訊查看。";
+"info.outputRule" = "2026 @ AndyWen.";
+/* 輸出設定 */
+"help.outputSettings" = "自訂輸出後綴與規則";
+"output.settingsTitle" = "輸出設定";
+"output.settingsDescription" = "選擇處理時的檔案命名方式。";
+"output.suffixLabel" = "檔案名稱後綴";
+"output.suffixPlaceholder" = "範例：_clean";
+"output.ruleLabel" = "當遇到同名檔案時";
+"output.rule.appendIndex" = "自動追加序號";
+"output.rule.appendIndex.desc" = "在檔案名稱後追加 _1、_2… 以避免衝突";
+"output.rule.overwrite" = "覆寫現有檔案";
+"output.rule.overwrite.desc" = "刪除同名檔案並寫入新的輸出";
+"output.rule.skip" = "跳過現有檔案";
+"output.rule.skip.desc" = "保留原檔案並將任務記為「已跳過」";
+/* 更新Log&通知 */
+"changelog.title" = "v1.6.27 更新";
+"changelog.body" = "• 新增「隱私打碼」(Beta 版)，採用裝置端模型自動打碼並支援手動框選；\n• 改進了各頁面的UI樣式，部分功能新增動畫；\n• 新增「查看 EXIF」功能，可查看圖片元資料；\n• 改進了英語在地化翻譯文字；\n• 在初次啟動時，WenRemover 將會請求「下載」資料夾的存取權限以供快速儲存，可在設定頁面修改。";
+"changelog.dismiss" = "關閉";
+"privacy.beta.title" = "隱私打碼 (Beta 版)";
+"privacy.beta.body" = "這是一個 Beta 版功能，所有識別均在裝置端進行。\n如果有檢測遺漏或錯誤識別，你可以在預覽介面點擊對應區域取消選擇並選擇手動框選。";
+"privacy.beta.dismiss" = "關閉";
+"notice.defaultTitle" = "公告";
+"notice.dismiss" = "關閉";
+"notice.action" = "查看詳情";
+/* 設定頁 */
+"settings.network.section" = "網路";
+"settings.notice.disable" = "關閉通知";
+"settings.notice.disable.note" = "關閉後將不再顯示公告/特別通知。";
+"settings.general.section" = "一般";
+"settings.dev.section" = "開發";
+"settings.dev.options" = "選項";
+"settings.dev.alwaysShowChangelog" = "始終顯示所有提示";
+"settings.dev.alwaysShowChangelog.note" = "開啟後將持續顯示更新日誌和首次打開提示。";
+"settings.notice.reset" = "重設所有提示狀態";
+"settings.notice.reset.note" = "點擊以恢復各頁面的首次打開提示（如 Beta 提示、更新日誌）。";
+"settings.output.section" = "輸出設定";
+"settings.output.reset" = "恢復預設輸出設定";
+"settings.output.reset.note" = "恢復預設的輸出設定。若要自訂輸出設定，請前往首頁「輸出設定」。";
+"settings.appearance.section" = "外觀";
+"settings.appearance.header" = "外觀";
+"settings.appearance.footer" = "選擇應用的主題外觀。";
+"appearance.light" = "淺色";
+"appearance.dark" = "深色";
+"appearance.system" = "跟隨系統";
+"appearance.theme" = "外觀設定";
+"settings.language.section" = "語言";
+"settings.language.label" = "應用程式語言";
+"settings.language.system" = "跟隨系統";
+"settings.language.english" = "English";
+"settings.language.chinese" = "简体中文";
+"settings.language.chinese_traditional" = "繁體中文";
+"settings.language.japanese" = "日本語";
+"settings.language.russian" = "Русский";
+/* 設定-語言下的文案 */
+"settings.language.helper.text" = "幫我們改進文件和翻譯。";
+"settings.language.helper.linkText" = "了解更多";
+"settings.language.helper.url" = "https://wenlei.top/wenremover-feedback";
+"settings.window.title" = "WenRemover 設定";
+/* 系統API */
+"panel.choose" = "選擇";
+"panel.add" = "加入";
+/* 錯誤訊息 */
+"error.invalidImage" = "無法讀取圖片。";
+"error.cannotCreateDestination" = "無法建立輸出檔案。（錯誤1）";
+"error.cannotWrite" = "寫入失敗。";
+"error.skippedByRule" = "已存在同名檔案，且規則設定為跳過。";
+
+/* Tab View & Privacy Protector */
+"tab.exif" = "EXIF 擦除";
+"tab.privacy" = "隱私打碼";
+"privacy.title" = "隱私打碼（BETA 版）";
+"privacy.subtitle" = "自動檢測並打碼人臉、文字及行動條碼資訊。";
+"privacy.status.loaded" = "圖片已載入。";
+"privacy.status.detecting" = "正在檢測隱私區域...";
+"privacy.status.noRegions" = "未檢測到隱私區域。";
+"privacy.status.review %lld" = "檢測到 %lld 個區域，請檢查並調整。";
+"privacy.status.items %lld" = "佇列中共有 %lld 張圖片，請檢查並調整。";
+"privacy.status.rendering" = "正在套用濾鏡...";
+"privacy.status.exported" = "已成功匯出。";
+"privacy.intensity.light" = "輕";
+"privacy.intensity.medium" = "中";
+"privacy.intensity.heavy" = "重";
+"privacy.intensity.label" = "打碼強度";
+"privacy.button.drawMode" = "手動框選";
+"privacy.button.detect" = "檢測隱私";
+"privacy.button.export" = "打碼並匯出";
+"privacy.button.exportAll" = "打碼並匯出";
+
+"permission.alert.title" = "需要資料夾存取權限";
+"permission.alert.message" = "你拒絕了存取下載資料夾，因此在匯出時需手動選擇目錄，或在系統設定中授予權限。";
+"permission.alert.button" = "好的";
+
+"settings.permission.section" = "權限管理";
+"settings.permission.manage" = "管理資料夾存取權限";
+"settings.permission.note" = "點擊以在系統設定中允許或撤銷應用程式對檔案的存取權限。";
+
+/* EXIF Info */
+"button.info" = "資訊";
+"exif.info.title" = "圖片資訊";
+"exif.make" = "裝置製造商";
+"exif.model" = "裝置型號";
+"exif.lens" = "鏡頭型號";
+"exif.datetime" = "拍攝時間";
+"exif.focalLength" = "焦距";
+"exif.colorProfile" = "色彩描述檔";
+"exif.colorDepth" = "色彩深度";
+"exif.aperture" = "光圈";
+"exif.exposureTime" = "曝光時間";
+"exif.iso" = "ISO 速度";
+"exif.location" = "地理位置";
+"exif.noLocation" = "無 GPS 資訊";
+
+"tab.exifViewer" = "查看 EXIF";
+"exifviewer.subtitle" = "查看圖片的元資料 & 拍攝地理位置。";
+"button.nextImage" = "下一張";
+
+"settings.appearance.glassmorphism" = "全局背景毛玻璃效果";
+
+/* EXIF Editor */
+"tab.exifEditor" = "EXIF 編輯";
+"editor.filter.make" = "過濾: 製造商";
+"editor.filter.model" = "過濾: 裝置型號";
+"editor.selectFile" = "請在側邊欄選擇文件";
+"editor.basic" = "基本資訊";
+"editor.make" = "製造商";
+"editor.model" = "裝置型號";
+"editor.date" = "拍攝時間";
+"editor.artist" = "藝術家";
+"editor.copyright" = "版權資訊";
+"editor.gps" = "地理位置";
+"button.export" = "匯出";
+"gps.setPinAtCenter" = "將大頭針設在中心";
+"button.remove" = "移除";
+"editor.mode.view" = "查看模式";
+"editor.mode.edit" = "編輯模式";
+"button.copyEXIF" = "複製所有 EXIF";
+"editor.unknown" = "未知";
+"editor.status.saved" = "已儲存至 %1$@";
+"editor.status.failed" = "儲存失敗: %1$@";
+"editor.batch.rename" = "批次重命名";
+"editor.batch.renameFormat" = "格式 (例如：{Year}-{Make})";
+"editor.batch.renameAndExport" = "重命名並匯出";
+"editor.batch.varsDescription" = "可用變數: {Year}, {Month}, {Day}, {Camera}, {Model}";
+"editor.batch.timeShift" = "批次時間偏移";
+"editor.batch.hoursToShift" = "偏移小時數:";
+"editor.batch.applyShift" = "套用偏移";
+"editor.status.batchRenameCompleted" = "批次重命名完成";
+"editor.status.batchExportCompleted" = "批次匯出完成";
+"button.startProcess" = "開始處理";
+"label.input" = "輸入";
+"label.output" = "輸出";
+"label.tools" = "工具";

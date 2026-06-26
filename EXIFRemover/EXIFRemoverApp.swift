@@ -1,5 +1,9 @@
 import SwiftUI
+#if os(macOS)
 import AppKit
+#else
+import UIKit
+#endif
 
 @main
 struct EXIFRemoverApp: App {
@@ -18,20 +22,29 @@ struct EXIFRemoverApp: App {
             ContentView()
                 .environment(\.locale, languagePreference == "system" ? .current : Locale(identifier: languagePreference))
                 .onAppear {
+                    #if os(macOS)
                     NSApp.appearance = Self.nsAppearance(for: appearancePreferenceRaw)
                     updateSettingsWindowTitle()
                     setMainWindowToMinSize()
+                    #endif
                 }
                 .onChange(of: appearancePreferenceRaw) { _, newValue in
+                    #if os(macOS)
                     NSApp.appearance = Self.nsAppearance(for: newValue)
+                    #endif
                 }
                 .onChange(of: languagePreference) { _, _ in
+                    #if os(macOS)
                     updateSettingsWindowTitle()
                     setMainWindowToMinSize()
+                    #endif
                 }
         }
+#if os(macOS)
         .windowStyle(.hiddenTitleBar)
         .windowToolbarStyle(.unified)
+#endif
+#if os(macOS)
         Settings {
             SettingsView()
                 .environment(\.locale, languagePreference == "system" ? .current : Locale(identifier: languagePreference))
@@ -43,8 +56,10 @@ struct EXIFRemoverApp: App {
                 }
             }
         }
+#endif
     }
 
+#if os(macOS)
     private static func nsAppearance(for rawValue: Int) -> NSAppearance? {
         switch rawValue {
         case 1:
@@ -57,10 +72,10 @@ struct EXIFRemoverApp: App {
     }
 
     private var minWindowWidth: CGFloat {
-        if languagePreference == "en" { return 820 }
-        if languagePreference == "zh-Hans" { return 780 }
+        if languagePreference == "en" { return 975 }
+        if languagePreference == "zh-Hans" { return 975 }
         let lang = Locale.current.language.languageCode?.identifier ?? "en"
-        return lang.contains("zh") ? 780 : 820
+        return lang.contains("zh") ? 975 : 975
     }
 
     private let minWindowHeight: CGFloat = 680
@@ -98,6 +113,7 @@ struct EXIFRemoverApp: App {
             }
         }
     }
+#endif
 
     private func localizedString(_ key: String) -> String {
         if languagePreference == "system" {
@@ -110,6 +126,7 @@ struct EXIFRemoverApp: App {
         return NSLocalizedString(key, comment: "")
     }
 
+#if os(macOS)
     private func updateSettingsWindowTitle() {
         DispatchQueue.main.async {
             let title = localizedString("settings.window.title")
@@ -126,4 +143,5 @@ struct EXIFRemoverApp: App {
             }
         }
     }
+#endif
 }

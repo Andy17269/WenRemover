@@ -30,8 +30,8 @@ Sealed on June 24, 2026, Version 1.202.7.
 "status.copiedToClipboard" = "已复制到剪贴板";
 /* Tips */
 "output.none" = "未选择";
-"dropzone.title" = "拖拽图片到此处";
-"dropzone.subtitle" = "支持 JPG / PNG / HEIC / TIFF 等多种图像文件";
+"dropzone.title" = "拖拽至此/点击添加";
+"dropzone.subtitle" = "支持多种图像文件";
 /* 状态 */
 "selected.count %lld" = "已选择 %lld";
 "status.noneSupported" = "未识别到可处理的图片。";
@@ -93,6 +93,9 @@ Sealed on June 24, 2026, Version 1.202.7.
 "settings.language.system" = "跟随系统";
 "settings.language.english" = "English";
 "settings.language.chinese" = "简体中文";
+"settings.language.chinese_traditional" = "繁体中文";
+"settings.language.japanese" = "日本語";
+"settings.language.russian" = "Русский";
 /* 设置-语言下的文案 */
 "settings.language.helper.text" = "帮我们改进文档和翻译。";
 "settings.language.helper.linkText" = "了解更多";
@@ -108,7 +111,7 @@ Sealed on June 24, 2026, Version 1.202.7.
 "error.skippedByRule" = "已存在同名文件，且规则设置为跳过。";
 
 /* Tab View & Privacy Protector */
-"tab.exif" = "移除 EXIF";
+"tab.exif" = "EXIF 擦除";
 "tab.privacy" = "隐私打码";
 "privacy.title" = "隐私打码（BETA 版）";
 "privacy.subtitle" = "自动检测并打码人脸、文字及二维码信息。";
@@ -155,3 +158,43 @@ Sealed on June 24, 2026, Version 1.202.7.
 "tab.exifViewer" = "查看 EXIF";
 "exifviewer.subtitle" = "查看图片的元数据 & 拍摄地理位置。";
 "button.nextImage" = "下一张";
+
+"settings.appearance.glassmorphism" = "全局背景毛玻璃效果";
+
+"button.chooseImages" = "选择图片";
+"button.readClipboard" = "从剪贴板读取";
+
+/* EXIF Editor */
+"tab.exifEditor" = "EXIF 编辑";
+"editor.filter.make" = "过滤: 制造商";
+"editor.filter.model" = "过滤: 设备型号";
+"editor.selectFile" = "请在侧边栏选择文件";
+"editor.basic" = "基本信息";
+"editor.make" = "制造商";
+"editor.model" = "设备型号";
+"editor.date" = "拍摄时间";
+"editor.artist" = "艺术家";
+"editor.copyright" = "版权信息";
+"editor.gps" = "地理位置";
+"button.export" = "导出";
+"gps.setPinAtCenter" = "将大头针设在中心";
+"button.remove" = "移除";
+"editor.mode.view" = "查看模式";
+"editor.mode.edit" = "编辑模式";
+"button.copyEXIF" = "复制所有 EXIF";
+"editor.unknown" = "未知";
+"editor.status.saved" = "已保存至 %1$@";
+"editor.status.failed" = "保存失败: %1$@";
+"editor.batch.rename" = "批量重命名";
+"editor.batch.renameFormat" = "格式 (例如：{Year}-{Make})";
+"editor.batch.renameAndExport" = "重命名并导出";
+"editor.batch.varsDescription" = "可用变量: {Year}, {Month}, {Day}, {Camera}, {Model}";
+"editor.batch.timeShift" = "批量时间偏移";
+"editor.batch.hoursToShift" = "偏移小时数:";
+"editor.batch.applyShift" = "应用偏移";
+"editor.status.batchRenameCompleted" = "批量重命名完成";
+"editor.status.batchExportCompleted" = "批量导出完成";
+"button.startProcess" = "开始处理";
+"label.input" = "输入";
+"label.output" = "输出";
+"label.tools" = "工具";

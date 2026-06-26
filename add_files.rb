@@ -16,10 +16,27 @@ files_to_add = [
   'PrivacyRenderer.swift',
   'PrivacyEditorViewModel.swift',
   'PrivacyProtectorView.swift',
+  'PlatformCompat.swift',
+  'EXIFData.swift',
+  'EXIFManager.swift',
+  'BatchProcessingEngine.swift',
+  'EXIFEditorViewModel.swift',
+  'GPSMapView.swift',
+  'EXIFEditorView.swift'
+]
+
+files_to_remove = [
   'EXIFReader.swift',
   'EXIFInfoView.swift',
   'EXIFViewerView.swift'
 ]
+
+files_to_remove.each do |file_name|
+  if ref = group.files.find { |f| f.path == file_name }
+    target.source_build_phase.remove_file_reference(ref)
+    ref.remove_from_project
+  end
+end
 
 files_to_add.each do |file_name|
   file_path = "EXIFRemover/#{file_name}"

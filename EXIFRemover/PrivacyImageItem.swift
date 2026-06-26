@@ -1,11 +1,15 @@
 import Foundation
+#if os(macOS)
 import AppKit
+#else
+import UIKit
+#endif
 
 struct PrivacyImageItem: Identifiable, Equatable {
     let id = UUID()
     let url: URL
     let cgImage: CGImage
-    let nsImage: NSImage
+    let platformImage: PlatformImage
     var detectedRegions: [PrivacyRegion] = []
     var selectedRegionIDs: Set<UUID> = []
     var isDetecting: Bool = false

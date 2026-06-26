@@ -1,0 +1,192 @@
+/* 2026@AndyWen.
+ LOVE WITH CNS.
+ Sealed on June 24, 2026, Version 1.202.7.
+ */
+/* 首页头部 */
+"app.title" = "WenRemover";
+"app.subtitle" = "画像を下にドラッグし、出力フォルダを選択して「EXIFを削除」をクリックします。";
+"tutorial.link" = "チュートリアルとヘルプ (簡体中国語)";
+"help.about" = "アプリについて";
+"menu.help" = "ヘルプ";
+/* 首页按钮 */
+"button.addFiles" = "追加";
+"menu.addFromFinder" = "Finderから追加";
+"button.addFromPhotos" = "写真から追加";
+"button.chooseOutput" = "出力先";
+"button.removeExif" = "EXIFを削除";
+"button.removing" = "削除中…";
+"button.clearList" = "クリア";
+"button.clearAll" = "クリア";
+"button.removeOne" = "削除";
+"button.outputSettings" = "出力設定";
+"button.cancel" = "キャンセル";
+"button.saveChanges" = "保存";
+"button.copyToClipboard" = "コピー";
+"status.copiedToClipboard" = "クリップボードにコピーしました";
+/* Tips */
+"output.none" = "未選択";
+"dropzone.title" = "ドラッグ/クリックで追加";
+"dropzone.subtitle" = "JPG / PNG / HEIC / TIFF などの画像ファイルに対応";
+/* 状态 */
+"selected.count %lld" = "%lld 枚選択中";
+"status.noneSupported" = "対応している画像が見つかりません。";
+"status.added %lld" = "%lld 枚の画像を追加しました。";
+"status.processing" = "処理中…";
+"status.done %lld %lld" = "完了：成功 %lld 枚、失敗 %lld 枚。";
+"status.doneDetailed %lld %lld %lld" = "完了：成功 %lld 枚、失敗 %lld 枚、スキップ %lld 枚。";
+/* 小info */
+"info.title" = "WenRemover";
+"info.subtitle" = "EXIFツール。";
+"info.supported" = "EXIF削除、プライバシーモザイク、メタデータ表示に対応。";
+"info.outputRule" = "2026 @ AndyWen.";
+/* 输出设置 */
+"help.outputSettings" = "出力サフィックスとルールをカスタマイズ";
+"output.settingsTitle" = "出力設定";
+"output.settingsDescription" = "ファイルの命名ルールを選択します。";
+"output.suffixLabel" = "ファイル名のサフィックス";
+"output.suffixPlaceholder" = "例：_clean";
+"output.ruleLabel" = "同名ファイルがある場合";
+"output.rule.appendIndex" = "連番を追加";
+"output.rule.appendIndex.desc" = "競合を避けるためにファイル名に _1, _2… を追加します";
+"output.rule.overwrite" = "上書きする";
+"output.rule.overwrite.desc" = "既存のファイルを削除して新しいファイルを出力します";
+"output.rule.skip" = "スキップする";
+"output.rule.skip.desc" = "元のファイルを保持し「スキップ」として記録します";
+/* 更新Log&通知 */
+"changelog.title" = "v1.6.27 アップデート";
+"changelog.body" = "• デバイス上のモデルを使用して自動的にモザイク処理し、手動選択にも対応する「プライバシーモザイク」(Beta) を追加しました。\n• 各ページのUIスタイルを改善し、一部にアニメーションを追加しました。\n• 画像のメタデータを確認できる「EXIFを表示」機能を追加しました。\n• 英語の翻訳テキストを改善しました。\n• 初回起動時、高速保存のために「ダウンロード」フォルダへのアクセス許可を求めます（設定で変更可能）。";
+"changelog.dismiss" = "閉じる";
+"privacy.beta.title" = "プライバシーモザイク (Beta)";
+"privacy.beta.body" = "これはBeta版の機能であり、すべての認識はデバイス上で行われます。\n認識漏れや誤認識がある場合、プレビュー画面で該当エリアをクリックして選択を解除し、手動で囲むことができます。";
+"privacy.beta.dismiss" = "閉じる";
+"notice.defaultTitle" = "お知らせ";
+"notice.dismiss" = "閉じる";
+"notice.action" = "詳細を見る";
+/* 设置页 */
+"settings.network.section" = "ネットワーク";
+"settings.notice.disable" = "通知をオフにする";
+"settings.notice.disable.note" = "オフにすると、お知らせや特別な通知が表示されなくなります。";
+"settings.general.section" = "一般";
+"settings.dev.section" = "開発者";
+"settings.dev.options" = "オプション";
+"settings.dev.alwaysShowChangelog" = "常にすべてのプロンプトを表示";
+"settings.dev.alwaysShowChangelog.note" = "オンにすると、更新ログや初回起動時のプロンプトが常に表示されます。";
+"settings.notice.reset" = "プロンプトの表示状態をリセット";
+"settings.notice.reset.note" = "各ページでの初回プロンプト（Beta版のヒントや更新ログなど）を再度表示します。";
+"settings.output.section" = "出力設定";
+"settings.output.reset" = "デフォルトの出力設定に戻す";
+"settings.output.reset.note" = "デフォルトの出力設定に戻します。カスタマイズするにはホームの「出力設定」へ移動してください。";
+"settings.appearance.section" = "外観";
+"settings.appearance.header" = "外観";
+"settings.appearance.footer" = "アプリのテーマを選択します。";
+"appearance.light" = "ライト";
+"appearance.dark" = "ダーク";
+"appearance.system" = "システムに従う";
+"appearance.theme" = "外観の設定";
+"settings.language.section" = "言語";
+"settings.language.label" = "アプリの言語";
+"settings.language.system" = "システムに従う";
+"settings.language.english" = "English";
+"settings.language.chinese" = "简体中文";
+"settings.language.chinese_traditional" = "繁体中文";
+"settings.language.japanese" = "日本語";
+"settings.language.russian" = "Русский";
+/* 设置-语言下的文案 */
+"settings.language.helper.text" = "ドキュメントと翻訳の改善にご協力ください。";
+"settings.language.helper.linkText" = "詳細を見る";
+"settings.language.helper.url" = "https://wenlei.top/wenremover-feedback";
+"settings.window.title" = "WenRemover 設定";
+/* 系统API */
+"panel.choose" = "選択";
+"panel.add" = "追加";
+/* 错误信息 */
+"error.invalidImage" = "画像を読み込めません。";
+"error.cannotCreateDestination" = "出力ファイルを作成できません。(エラー1)";
+"error.cannotWrite" = "書き込みに失敗しました。";
+"error.skippedByRule" = "同名ファイルが存在し、ルールがスキップに設定されています。";
+
+/* Tab View & Privacy Protector */
+"tab.exif" = "EXIF クリーナー";
+"tab.privacy" = "プライバシーモザイク";
+"privacy.title" = "プライバシーモザイク (BETA)";
+"privacy.subtitle" = "顔、テキスト、QRコードを自動検出しモザイク処理します。";
+"privacy.status.loaded" = "画像を読み込みました。";
+"privacy.status.detecting" = "プライバシー領域を検出中...";
+"privacy.status.noRegions" = "プライバシー領域は検出されませんでした。";
+"privacy.status.review %lld" = "%lld 個の領域を検出しました。確認してください。";
+"privacy.status.items %lld" = "キューに %lld 枚の画像があります。確認してください。";
+"privacy.status.rendering" = "フィルターを適用中...";
+"privacy.status.exported" = "正常にエクスポートしました。";
+"privacy.intensity.light" = "弱";
+"privacy.intensity.medium" = "中";
+"privacy.intensity.heavy" = "強";
+"privacy.intensity.label" = "強度";
+"privacy.button.drawMode" = "手動で囲む";
+"privacy.button.detect" = "検出";
+"privacy.button.export" = "モザイク処理して保存";
+"privacy.button.exportAll" = "モザイク処理して保存";
+
+"permission.alert.title" = "フォルダのアクセス権が必要です";
+"permission.alert.message" = "ダウンロードフォルダへのアクセスが拒否されたため、エクスポート時に手動でディレクトリを選択するか、システム設定で権限を付与してください。";
+"permission.alert.button" = "OK";
+
+"settings.permission.section" = "権限管理";
+"settings.permission.manage" = "フォルダへのアクセス権を管理";
+"settings.permission.note" = "クリックしてシステム設定を開き、ファイルのアクセス権を許可または取り消します。";
+
+/* EXIF Info */
+"button.info" = "情報";
+"exif.info.title" = "画像情報";
+"exif.make" = "カメラメーカー";
+"exif.model" = "カメラモデル";
+"exif.lens" = "レンズモデル";
+"exif.datetime" = "撮影日時";
+"exif.focalLength" = "焦点距離";
+"exif.colorProfile" = "カラープロファイル";
+"exif.colorDepth" = "色深度";
+"exif.aperture" = "絞り値";
+"exif.exposureTime" = "露出時間";
+"exif.iso" = "ISO感度";
+"exif.location" = "位置情報";
+"exif.noLocation" = "GPS情報なし";
+
+"tab.exifViewer" = "EXIFを表示";
+"exifviewer.subtitle" = "画像のメタデータと撮影場所を表示します。";
+"button.nextImage" = "次へ";
+
+"settings.appearance.glassmorphism" = "すりガラス風背景";
+
+/* EXIF Editor */
+"tab.exifEditor" = "EXIF エディター";
+"editor.filter.make" = "フィルター: メーカー";
+"editor.filter.model" = "フィルター: モデル";
+"editor.selectFile" = "リストからファイルを選択してください";
+"editor.basic" = "基本情報";
+"editor.make" = "メーカー";
+"editor.model" = "モデル";
+"editor.date" = "撮影日時";
+"editor.artist" = "アーティスト";
+"editor.copyright" = "著作権";
+"editor.gps" = "位置情報";
+"button.export" = "書き出し";
+"gps.setPinAtCenter" = "中心にピンを配置";
+"button.remove" = "削除";
+"editor.mode.view" = "表示モード";
+"editor.mode.edit" = "編集モード";
+"button.copyEXIF" = "すべての EXIF をコピー";
+"editor.unknown" = "不明";
+"editor.status.saved" = "％1$@ に保存しました";
+"editor.status.failed" = "保存に失敗しました：%1$@";
+"editor.batch.rename" = "一括リネーム";
+"editor.batch.renameFormat" = "フォーマット (例: {Year}-{Make})";
+"editor.batch.renameAndExport" = "リネームして書き出し";
+"editor.batch.varsDescription" = "利用可能な変数: {Year}, {Month}, {Day}, {Camera}, {Model}";
+"editor.batch.timeShift" = "一括時間シフト";
+"editor.batch.hoursToShift" = "シフトする時間:";
+"editor.batch.applyShift" = "シフトを適用";
+"editor.status.batchRenameCompleted" = "一括リネームが完了しました";
+"editor.status.batchExportCompleted" = "一括書き出しが完了しました";
+"button.startProcess" = "処理を開始";
+"label.input" = "入力";
+"label.output" = "出力";
+"label.tools" = "ツール";

@@ -1,5 +1,6 @@
 import SwiftUI
 import UniformTypeIdentifiers
+import PhotosUI
 
 struct PrivacyProtectorView: View {
     @StateObject private var viewModel = PrivacyEditorViewModel()
@@ -7,6 +8,11 @@ struct PrivacyProtectorView: View {
     @AppStorage("outputSuffix") private var storedOutputSuffix = "_clean"
     @AppStorage("outputConflictRule") private var storedOutputConflictRule = OutputConflictRule.appendIndex.rawValue
     @AppStorage("defaultOutputPath") private var defaultOutputPath: String = ""
+    @AppStorage("enableGlassmorphism") private var enableGlassmorphism = true
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @State private var isPhotoPickerPresented = false
+    @State private var photoPickerItems: [PhotosPickerItem] = []
+    @State private var showOutputFolderImporter = false
     
     @State private var isTargeted = false
     @State private var isHoveringDropZone = false
@@ -38,48 +44,93 @@ struct PrivacyProtectorView: View {
     }
 
     var body: some View {
-        VStack(spacing: 16) {
-            VStack(alignment: .leading, spacing: 8) {
-                Text(LocalizedStringKey("privacy.title"))
-                    .font(.largeTitle)
-                    .bold()
-                
-                Text(LocalizedStringKey("privacy.subtitle"))
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                
-                if showBetaBanner || alwaysShowChangelogBanner {
-                    betaBannerView
-                        .padding(.top, 4)
+        let layout = horizontalSizeClass == .compact ? AnyLayout(VStackLayout(spacing: 0)) : AnyLayout(HStackLayout(spacing: 0))
+        
+        layout {
+            // Left Side: Drop Zone / Image Stack
+            VStack {
+                if viewModel.items.isEmpty {
+                    dropZone
+                        .padding(40)
+                } else {
+                    imageStackView
+                        .padding(20)
                 }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.top, 28)
-            
-            if viewModel.state == .idle {
-                dropZone
-            } else {
-                imageStackView
+            .frame(minWidth: horizontalSizeClass == .compact ? 0 : 400, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
+            .background(enableGlassmorphism ? Color.clear : Color.controlBackground)
+            #if os(macOS)
+            .onDrop(of: [.fileURL, .image], isTargeted: $isTargeted) { providers in
+                return handleDrop(providers: providers)
             }
-            
-            controlBar
-            
-            if let statusMessage = viewModel.statusMessage {
-                Text(statusMessage)
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+            #endif
+
+            if horizontalSizeClass != .compact {
+                Divider()
             }
-            
-            fileList
+
+            // Right Side: Sidebar
+            VStack(spacing: 20) {
+                // Header
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(LocalizedStringKey("privacy.title"))
+                        .font(.title)
+                        .bold()
+                    
+                    Text(LocalizedStringKey("privacy.subtitle"))
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                    
+                    if showBetaBanner || alwaysShowChangelogBanner {
+                        betaBannerView
+                            .padding(.top, 4)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                #if os(macOS)
+                .padding(.top, 52)
+                #else
+                .padding(.top, 12)
+                #endif
+                
+                if let statusMessage = viewModel.statusMessage {
+                    Text(statusMessage)
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                
+                fileList
+                
+                Spacer(minLength: 0)
+                
+                controlBar
+            }
+            .padding(.horizontal, 20)
+            .padding(.bottom, 20)
+            .frame(width: horizontalSizeClass == .compact ? nil : 350)
+            .frame(maxHeight: horizontalSizeClass == .compact ? nil : .infinity, alignment: .top)
+            .background(enableGlassmorphism ? Color.clear : Color.windowBackground)
         }
-        .padding(20)
+        #if os(macOS)
         .ignoresSafeArea()
+        #endif
         .sheet(isPresented: $showOutputSettings) {
             OutputSettingsView(configuration: outputConfiguration, blurIntensity: $viewModel.blurIntensity) { newConfiguration in
                 let normalized = newConfiguration.normalized()
                 storedOutputSuffix = normalized.suffix
                 storedOutputConflictRule = normalized.rule.rawValue
+            }
+        }
+        .photosPicker(isPresented: $isPhotoPickerPresented, selection: $photoPickerItems, matching: .images)
+        .onChange(of: photoPickerItems) { _ , newItems in
+            handlePhotoSelection(items: newItems)
+        }
+        .fileImporter(isPresented: $showOutputFolderImporter, allowedContentTypes: [.folder], allowsMultipleSelection: false) { result in
+            if case .success(let urls) = result, let url = urls.first {
+                _ = url.startAccessingSecurityScopedResource()
+                viewModel.outputFolder = url
+                defaultOutputPath = url.path
             }
         }
         .onAppear {
@@ -147,29 +198,29 @@ struct PrivacyProtectorView: View {
     }
 
     private var dropZone: some View {
+        #if os(macOS)
         RoundedRectangle(cornerRadius: 12)
             .fill(isTargeted || isHoveringDropZone ? Color.accentColor.opacity(0.15) : Color.secondary.opacity(0.05))
             .overlay(
                 ZStack {
                     RoundedRectangle(cornerRadius: 12)
                         .strokeBorder(style: StrokeStyle(lineWidth: 2, dash: [6]))
-                        .foregroundStyle(isTargeted ? Color.accentColor : (isHoveringDropZone ? Color.gray : Color.clear))
+                        .foregroundStyle(isTargeted ? Color.accentColor : (isHoveringDropZone ? Color.gray : Color.secondary.opacity(0.2)))
                     
-                    VStack(spacing: 8) {
+                    VStack(spacing: 12) {
                         Image(systemName: "photo.on.rectangle.angled")
-                            .font(.system(size: 32))
+                            .font(.system(size: 48))
                             .symbolRenderingMode(.hierarchical)
+                            .foregroundStyle(isTargeted || isHoveringDropZone ? Color.accentColor : Color.secondary)
                         Text(LocalizedStringKey("dropzone.title"))
-                            .font(.headline)
+                            .font(.title3)
+                            .bold()
                         Text(LocalizedStringKey("dropzone.subtitle"))
                             .foregroundStyle(.secondary)
                     }
                 }
             )
-            .frame(height: 300)
-            .onDrop(of: ["public.file-url"], isTargeted: $isTargeted) { providers in
-                return handleDrop(providers: providers)
-            }
+            .frame(maxWidth: .infinity, maxHeight: 300)
             .onHover { hovering in
                 withAnimation(.easeInOut(duration: 0.2)) {
                     isHoveringDropZone = hovering
@@ -178,6 +229,77 @@ struct PrivacyProtectorView: View {
             .onTapGesture {
                 chooseInputFiles()
             }
+        #else
+        VStack(spacing: 0) {
+            Button {
+                chooseInputFiles()
+            } label: {
+                VStack(spacing: 12) {
+                    Image(systemName: "photo.on.rectangle")
+                        .font(.system(size: 48))
+                        .foregroundStyle(Color.accentColor)
+                    Text(LocalizedStringKey("button.chooseImages"))
+                        .font(.title3)
+                        .bold()
+                        .foregroundStyle(Color.primary)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+
+            Divider()
+                .background(Color.primary.opacity(0.1))
+
+            Button {
+                loadFromClipboard()
+            } label: {
+                VStack(spacing: 12) {
+                    Image(systemName: "doc.on.clipboard")
+                        .font(.system(size: 48))
+                        .foregroundStyle(Color.secondary)
+                    Text(LocalizedStringKey("button.readClipboard"))
+                        .font(.title3)
+                        .bold()
+                        .foregroundStyle(Color.primary)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+        }
+        .frame(maxWidth: .infinity, maxHeight: horizontalSizeClass == .regular ? .infinity : 300)
+        .background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(.ultraThinMaterial)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 20)
+                .strokeBorder(Color.white.opacity(0.3), lineWidth: 1)
+        )
+        .shadow(color: Color.black.opacity(0.08), radius: 15, x: 0, y: 8)
+        .padding()
+        #endif
+    }
+    
+    private func loadFromClipboard() {
+        #if !os(macOS)
+        if UIPasteboard.general.hasImages {
+            if let images = UIPasteboard.general.images {
+                var urls: [URL] = []
+                for image in images {
+                    if let data = image.jpegData(compressionQuality: 1.0) {
+                        let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".jpg")
+                        try? data.write(to: tempURL)
+                        urls.append(tempURL)
+                    }
+                }
+                if !urls.isEmpty {
+                    viewModel.loadImages(from: urls)
+                }
+            }
+        }
+        #endif
     }
     
     private var imageStackView: some View {
@@ -310,41 +432,20 @@ struct PrivacyProtectorView: View {
     }
     
     private var controlBar: some View {
-        VStack(spacing: 12) {
-            HStack(spacing: 16) {
-                Button {
-                    viewModel.clearImages()
-                } label: {
-                    Label {
-                        Text(LocalizedStringKey("button.clearList"))
-                    } icon: {
-                        Image(systemName: "trash")
-                            .symbolRenderingMode(.hierarchical)
-                    }
-                    .frame(height: 38)
-                    .padding(.horizontal, 16)
-                    .background(Color.secondary.opacity(0.1))
-                    .clipShape(Capsule())
-                    .overlay(
-                        Capsule()
-                            .stroke(Color.secondary.opacity(0.2), lineWidth: 0.5)
-                    )
-                }
-                .buttonStyle(.plain)
-                .fixedSize()
-                .disabled(viewModel.state == .idle || viewModel.state == .rendering)
-                .opacity(viewModel.state == .idle || viewModel.state == .rendering ? 0.5 : 1)
+        VStack(alignment: .leading, spacing: 20) {
+            // Tools Section
+            VStack(alignment: .leading, spacing: 12) {
+                Text(localizedString("label.tools"))
+                    .font(.subheadline.bold())
+                    .foregroundStyle(.secondary)
                 
-                Spacer()
-                
-                HStack(spacing: 12) {
+                HStack {
                     Toggle(isOn: $isDrawingMode) {
                         Label(LocalizedStringKey("privacy.button.drawMode"), systemImage: "paintbrush.pointed")
                     }
                     .toggleStyle(.button)
                     .buttonStyle(.plain)
-                    .frame(height: 38)
-                    .padding(.horizontal, 16)
+                    .frame(maxWidth: .infinity, minHeight: 38)
                     .background(isDrawingMode ? Color.accentColor.opacity(0.15) : Color.secondary.opacity(0.1))
                     .clipShape(Capsule())
                     .overlay(
@@ -353,31 +454,19 @@ struct PrivacyProtectorView: View {
                     )
                     .disabled(viewModel.state == .idle || viewModel.state == .rendering)
                     .opacity(viewModel.state == .idle || viewModel.state == .rendering ? 0.5 : 1)
-    
-                    Button {
-                        showOutputSettings = true
-                    } label: {
-                        Label {
-                            Text(LocalizedStringKey("button.outputSettings"))
-                        } icon: {
-                            Image(systemName: "slider.horizontal.3")
-                                .symbolRenderingMode(.hierarchical)
-                        }
-                        .frame(height: 38)
-                        .padding(.horizontal, 16)
-                        .background(Color.secondary.opacity(0.1))
-                        .clipShape(Capsule())
-                        .overlay(
-                            Capsule()
-                                .stroke(Color.secondary.opacity(0.2), lineWidth: 0.5)
-                        )
-                    }
-                    .buttonStyle(.plain)
-                    .fixedSize()
-                    .help(LocalizedStringKey("help.outputSettings"))
-                    .disabled(viewModel.state == .rendering)
-                    .opacity(viewModel.state == .rendering ? 0.5 : 1)
-
+                }
+            }
+            
+            Divider()
+            
+            // Output Section
+            VStack(alignment: .leading, spacing: 12) {
+                Text(localizedString("label.output"))
+                    .font(.subheadline.bold())
+                    .foregroundStyle(.secondary)
+                
+                HStack(spacing: 12) {
+                    #if os(macOS)
                     Button {
                         chooseOutputFolder()
                     } label: {
@@ -389,8 +478,7 @@ struct PrivacyProtectorView: View {
                             Image(systemName: "folder")
                                 .symbolRenderingMode(.hierarchical)
                         }
-                        .frame(height: 38)
-                        .padding(.horizontal, 16)
+                        .frame(maxWidth: .infinity, minHeight: 38)
                         .background(Color.secondary.opacity(0.1))
                         .clipShape(Capsule())
                         .overlay(
@@ -399,7 +487,6 @@ struct PrivacyProtectorView: View {
                         )
                     }
                     .buttonStyle(.plain)
-                    .fixedSize()
                     .overlay(alignment: .topTrailing) {
                         if viewModel.outputFolder == nil {
                             Circle()
@@ -410,80 +497,125 @@ struct PrivacyProtectorView: View {
                         }
                     }
                     .help(LocalizedStringKey("button.chooseOutput"))
-                }
-            }
-            
-            HStack(spacing: 12) {
-                Spacer()
-                
-                if viewModel.items.count == 1 {
-                    Button {
-                        viewModel.copySingleImageToClipboard(configuration: outputConfiguration)
-                    } label: {
-                        Label(LocalizedStringKey("button.copyToClipboard"), systemImage: "doc.on.clipboard")
-                            .font(.headline)
-                            .foregroundStyle(.white)
+                    #else
+                    Label {
+                        Text("保存到相册 (Photos Library)")
+                            .lineLimit(1)
+                            .truncationMode(.middle)
+                            .foregroundStyle(.secondary)
+                    } icon: {
+                        Image(systemName: "photo.on.rectangle")
+                            .symbolRenderingMode(.hierarchical)
                     }
-                    .frame(height: 38)
-                    .padding(.horizontal, 24)
-                    .background(Color.accentColor)
+                    .frame(maxWidth: .infinity, minHeight: 38)
+                    .background(Color.secondary.opacity(0.1))
                     .clipShape(Capsule())
+                    #endif
+                    
+                    Button {
+                        showOutputSettings = true
+                    } label: {
+                        Image(systemName: "slider.horizontal.3")
+                            .symbolRenderingMode(.hierarchical)
+                            .frame(width: 38, height: 38)
+                            .background(Color.secondary.opacity(0.1))
+                            .clipShape(Circle())
+                            .overlay(Circle().stroke(Color.secondary.opacity(0.2), lineWidth: 0.5))
+                    }
                     .buttonStyle(.plain)
-                    .disabled(viewModel.state == .idle || viewModel.state == .rendering)
-                    .opacity((viewModel.state == .idle || viewModel.state == .rendering) && !showSuccessCheck ? 0.5 : 1)
+                    .help(LocalizedStringKey("help.outputSettings"))
+                    .disabled(viewModel.state == .rendering)
+                    .opacity(viewModel.state == .rendering ? 0.5 : 1)
                 }
                 
-                Button {
-                    viewModel.exportAllImages(configuration: outputConfiguration)
-                } label: {
-                    HStack(spacing: 8) {
-                        if showSuccessCheck {
-                            Image(systemName: "checkmark")
+                HStack(spacing: 12) {
+                    if viewModel.items.count == 1 {
+                        Button {
+                            viewModel.copySingleImageToClipboard(configuration: outputConfiguration)
+                        } label: {
+                            Label(LocalizedStringKey("button.copyToClipboard"), systemImage: "doc.on.clipboard")
                                 .font(.headline)
-                                .transition(.scale.combined(with: .opacity))
-                        } else {
-                            Image(systemName: viewModel.items.count > 1 ? "square.and.arrow.down.on.square" : "square.and.arrow.down")
-                                .font(.headline)
-                                .transition(.scale.combined(with: .opacity))
+                                .foregroundStyle(.white)
+                                .frame(maxWidth: .infinity, minHeight: 38)
+                                .background(Color.accentColor)
+                                .clipShape(Capsule())
                         }
-                        
-                        if viewModel.state == .rendering {
-                            ProgressView()
-                                .controlSize(.small)
-                        } else {
-                            Text(viewModel.items.count > 1 ? localizedString("privacy.button.exportAll") : localizedString("privacy.button.export"))
-                                .font(.headline)
-                        }
+                        .buttonStyle(.plain)
+                        .disabled(viewModel.state == .idle || viewModel.state == .rendering)
+                        .opacity((viewModel.state == .idle || viewModel.state == .rendering) && !showSuccessCheck ? 0.5 : 1)
                     }
-                    .foregroundStyle(.white)
+                    
+                    Button {
+                        viewModel.exportAllImages(configuration: outputConfiguration)
+                    } label: {
+                        HStack(spacing: 8) {
+                            if showSuccessCheck {
+                                Image(systemName: "checkmark")
+                                    .font(.headline)
+                                    .transition(.scale.combined(with: .opacity))
+                            } else {
+                                Image(systemName: viewModel.items.count > 1 ? "square.and.arrow.down.on.square" : "square.and.arrow.down")
+                                    .font(.headline)
+                                    .transition(.scale.combined(with: .opacity))
+                            }
+                            
+                            if viewModel.state == .rendering {
+                                ProgressView()
+                                    .controlSize(.small)
+                            } else {
+                                Text(viewModel.items.count > 1 ? localizedString("privacy.button.exportAll") : localizedString("privacy.button.export"))
+                                    .font(.headline)
+                            }
+                        }
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity, minHeight: 38)
+                        .background(showSuccessCheck ? Color.green : Color.accentColor)
+                        .animation(.easeInOut(duration: 0.2), value: showSuccessCheck)
+                        .clipShape(Capsule())
+                    }
+                    .buttonStyle(.plain)
+                    #if os(macOS)
+                    .disabled((viewModel.state != .review && viewModel.state != .exported) || viewModel.outputFolder == nil || viewModel.state == .rendering)
+                    .opacity(((viewModel.state != .review && viewModel.state != .exported) || viewModel.outputFolder == nil || viewModel.state == .rendering) && !showSuccessCheck ? 0.5 : 1)
+                    #else
+                    .disabled((viewModel.state != .review && viewModel.state != .exported) || viewModel.state == .rendering)
+                    .opacity(((viewModel.state != .review && viewModel.state != .exported) || viewModel.state == .rendering) && !showSuccessCheck ? 0.5 : 1)
+                    #endif
                 }
-                .frame(height: 38)
-                .padding(.horizontal, 32)
-                .background(showSuccessCheck ? Color.green : Color.accentColor)
-                .animation(.easeInOut(duration: 0.2), value: showSuccessCheck)
-                .clipShape(Capsule())
-                .buttonStyle(.plain)
-                .disabled((viewModel.state != .review && viewModel.state != .exported) || viewModel.outputFolder == nil || viewModel.state == .rendering)
-                .opacity(((viewModel.state != .review && viewModel.state != .exported) || viewModel.outputFolder == nil || viewModel.state == .rendering) && !showSuccessCheck ? 0.5 : 1)
             }
         }
-        .padding(16)
+        .padding(.vertical, 8)
     }
     
+#if os(macOS)
     private func handleDrop(providers: [NSItemProvider]) -> Bool {
         var urls: [URL] = []
         let group = DispatchGroup()
         
         for provider in providers {
+            group.enter()
             if provider.hasItemConformingToTypeIdentifier(UTType.fileURL.identifier) {
-                group.enter()
                 provider.loadItem(forTypeIdentifier: UTType.fileURL.identifier, options: nil) { (item, error) in
+                    defer { group.leave() }
                     if let data = item as? Data,
                        let url = URL(dataRepresentation: data, relativeTo: nil) {
                         urls.append(url)
+                    } else if let url = item as? URL {
+                        urls.append(url)
                     }
-                    group.leave()
                 }
+            } else if provider.hasItemConformingToTypeIdentifier(UTType.image.identifier) {
+                provider.loadFileRepresentation(forTypeIdentifier: UTType.image.identifier) { url, error in
+                    defer { group.leave() }
+                    if let originalURL = url {
+                        let tempDir = FileManager.default.temporaryDirectory
+                        let destURL = tempDir.appendingPathComponent(UUID().uuidString + "_" + originalURL.lastPathComponent)
+                        try? FileManager.default.copyItem(at: originalURL, to: destURL)
+                        urls.append(destURL)
+                    }
+                }
+            } else {
+                group.leave()
             }
         }
         
@@ -524,6 +656,52 @@ struct PrivacyProtectorView: View {
             }
         }
     }
+#else
+    private func chooseOutputFolder() {
+        showOutputFolderImporter = true
+    }
+    private func chooseInputFiles() {
+        isPhotoPickerPresented = true
+    }
+#endif
+
+    private func handlePhotoSelection(items: [PhotosPickerItem]) {
+        guard !items.isEmpty else { return }
+        Task(priority: .userInitiated) {
+            var imported: [URL] = []
+            for item in items {
+                if let url = await persistPhotoPickerItem(item) {
+                    imported.append(url)
+                }
+            }
+
+            if !imported.isEmpty {
+                await MainActor.run {
+                    self.viewModel.loadImages(from: imported)
+                }
+            }
+            photoPickerItems.removeAll()
+        }
+    }
+
+    private func persistPhotoPickerItem(_ item: PhotosPickerItem) async -> URL? {
+        guard let data = try? await item.loadTransferable(type: Data.self) else { return nil }
+        let ext = item.supportedContentTypes.first?.preferredFilenameExtension ?? "jpg"
+        let tempURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent("wenremover-\(UUID().uuidString)")
+            .appendingPathExtension(ext)
+        do {
+            try data.write(to: tempURL, options: [.atomic])
+            guard ImageStripper.isSupportedImage(url: tempURL) else {
+                try? FileManager.default.removeItem(at: tempURL)
+                return nil
+            }
+            return tempURL
+        } catch {
+            try? FileManager.default.removeItem(at: tempURL)
+            return nil
+        }
+    }
     
     private var fileList: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -535,11 +713,25 @@ struct PrivacyProtectorView: View {
                 Spacer()
                 
                 Button {
+                    chooseInputFiles()
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: "plus")
+                        Text(localizedString("button.addFiles"))
+                    }
+                    .font(.subheadline)
+                    .foregroundStyle(Color.accentColor)
+                }
+                .buttonStyle(.plain)
+                .disabled(viewModel.state == .rendering)
+                .padding(.trailing, 12)
+                
+                Button {
                     viewModel.clearImages()
                 } label: {
                     HStack(spacing: 4) {
                         Image(systemName: "trash")
-                        Text(LocalizedStringKey("button.clearAll"))
+                        Text(localizedString("button.clearAll"))
                     }
                     .font(.subheadline)
                     .foregroundStyle(viewModel.items.isEmpty ? Color.secondary.opacity(0.5) : Color.red)
@@ -606,7 +798,7 @@ struct PrivacyImageCardView: View {
     }
     
     var body: some View {
-        Image(nsImage: item.nsImage)
+        Image(platformImage: item.platformImage)
             .resizable()
             .scaledToFit()
             .cornerRadius(12)

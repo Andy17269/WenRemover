@@ -39,75 +39,116 @@ struct EXIFRemoverView: View {
     }
 
     private var minWindowWidth: CGFloat {
-        if languagePreference == "en" { return 820 }
-        if languagePreference == "zh-Hans" { return 780 }
+        if languagePreference == "en" { return 975 }
+        if languagePreference == "zh-Hans" { return 975 }
         let lang = Locale.current.language.languageCode?.identifier ?? "en"
-        return lang.contains("zh") ? 780 : 820
+        return lang.contains("zh") ? 975 : 975
     }
 
+    @AppStorage("enableGlassmorphism") private var enableGlassmorphism = true
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
+    @State private var showOutputFolderImporter = false
+    
     var body: some View {
-        VStack(spacing: 16) {
-            VStack(alignment: .leading, spacing: 10) {
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(LocalizedStringKey("app.title"))
-                            .font(.largeTitle)
-                            .bold()
+        let layout = horizontalSizeClass == .compact ? AnyLayout(VStackLayout(spacing: 0)) : AnyLayout(HStackLayout(spacing: 0))
+        
+        layout {
+            // Left Side: Drop Zone
+            VStack {
+                dropZone
+                    .padding(40)
+            }
+            .frame(minWidth: horizontalSizeClass == .compact ? 0 : 400, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
+            .background(enableGlassmorphism ? Color.clear : Color.controlBackground)
+            #if os(macOS)
+            .onDrop(of: [.fileURL, .image], isTargeted: $isTargeted) { providers in
+                return handleDrop(providers: providers)
+            }
+            #endif
 
-                        Text(LocalizedStringKey("app.subtitle"))
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                            .fixedSize(horizontal: false, vertical: true)
+            if horizontalSizeClass != .compact {
+                Divider()
+            }
 
-                        Link(LocalizedStringKey("tutorial.link"), destination: tutorialURL)
-                            .font(.callout)
-                            .foregroundColor(.accentColor)
+            // Right Side: Sidebar
+            VStack(spacing: 20) {
+                // Header
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack(alignment: .top) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(LocalizedStringKey("app.title"))
+                                .font(.title)
+                                .bold()
+
+                            Text(LocalizedStringKey("app.subtitle"))
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+
+                            Link(LocalizedStringKey("tutorial.link"), destination: tutorialURL)
+                                .font(.callout)
+                                .foregroundColor(.accentColor)
+                        }
+
+                        Spacer()
+
+                        Button {
+                            showInfo = true
+                        } label: {
+                            Image(systemName: "info.circle")
+                                .font(.title2)
+                        }
+                        .buttonStyle(.borderless)
+                        .help(LocalizedStringKey("help.about"))
+                        .popover(isPresented: $showInfo, arrowEdge: .top) {
+                            AppInfoView()
+                                .padding(16)
+                                .frame(width: 300)
+                        }
                     }
-
-                    Spacer()
-
-                    Button {
-                        showInfo = true
-                    } label: {
-                        Image(systemName: "info.circle")
-                            .font(.title2)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    if showNoticeBanner, let noticeBanner {
+                        noticeBannerView(noticeBanner)
+                            .padding(.top, 4)
                     }
-                    .buttonStyle(.borderless)
-                    .help(LocalizedStringKey("help.about"))
-                    .popover(isPresented: $showInfo, arrowEdge: .top) {
-                        AppInfoView()
-                            .padding(16)
-                            .frame(width: 300)
+                    if showChangelogBanner || alwaysShowChangelogBanner {
+                        changelogBanner
+                            .padding(.top, 4)
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.top, 28)
+                #if os(macOS)
+                .padding(.top, 52)
+                #else
+                .padding(.top, 12)
+                #endif
 
-                if showNoticeBanner, let noticeBanner {
-                    noticeBannerView(noticeBanner)
+                if let statusMessage {
+                    Text(statusMessage)
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                if showChangelogBanner || alwaysShowChangelogBanner {
-                    changelogBanner
-                }
+
+                fileList
+                
+                Spacer(minLength: 0)
+
+                controlBar
             }
-
-            dropZone
-
-            controlBar
-
-            if let statusMessage {
-                Text(statusMessage)
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-
-            fileList
+            .padding(.horizontal, 20)
+            .padding(.bottom, 20)
+            .frame(width: horizontalSizeClass == .compact ? nil : 350)
+            .frame(maxHeight: horizontalSizeClass == .compact ? nil : .infinity, alignment: .top)
+            .background(enableGlassmorphism ? Color.clear : Color.windowBackground)
         }
-        .padding(20)
-        .frame(minWidth: minWindowWidth, idealWidth: minWindowWidth, minHeight: 680, idealHeight: 760)
+        .frame(minWidth: horizontalSizeClass == .compact ? nil : minWindowWidth, idealWidth: horizontalSizeClass == .compact ? nil : minWindowWidth, minHeight: horizontalSizeClass == .compact ? nil : 680, idealHeight: horizontalSizeClass == .compact ? nil : 760)
         .background(FullscreenDisabler())
+        #if os(macOS)
         .ignoresSafeArea()
+        #endif
         .onAppear {
             if !defaultOutputPath.isEmpty {
                 outputFolder = URL(fileURLWithPath: defaultOutputPath)
@@ -139,164 +180,168 @@ struct EXIFRemoverView: View {
                 storedOutputConflictRule = normalized.rule.rawValue
             }
         }
+
+        .fileImporter(isPresented: $showOutputFolderImporter, allowedContentTypes: [.folder], allowsMultipleSelection: false) { result in
+            if case .success(let urls) = result, let url = urls.first {
+                _ = url.startAccessingSecurityScopedResource()
+                outputFolder = url
+                defaultOutputPath = url.path
+            }
+        }
     }
 
     private var controlBar: some View {
-        HStack(spacing: 16) {
-            Menu {
-                Button {
-                    chooseInputFiles()
-                } label: {
-                    Label(LocalizedStringKey("menu.addFromFinder"), systemImage: "folder.badge.plus")
-                }
-                Button {
-                    isPhotoPickerPresented = true
-                } label: {
-                    Label(LocalizedStringKey("button.addFromPhotos"), systemImage: "photo.on.rectangle")
-                }
-                .disabled(isProcessing)
-            } label: {
-                Label {
-                    Text(LocalizedStringKey("button.addFiles"))
-                } icon: {
-                    Image(systemName: "plus")
-                        .symbolRenderingMode(.hierarchical)
-                }
-                .frame(height: 38)
-                .padding(.horizontal, 16)
-                .background(Color.secondary.opacity(0.1))
-                .clipShape(Capsule())
-                .overlay(
-                    Capsule()
-                        .stroke(Color.secondary.opacity(0.2), lineWidth: 0.5)
-                )
-            }
-            .menuStyle(.borderlessButton)
-            .menuIndicator(.hidden)
-            .fixedSize()
-            .help(LocalizedStringKey("button.addFiles"))
-            .disabled(isProcessing)
+        VStack(alignment: .leading, spacing: 20) {
 
-            Spacer()
-
-            HStack(spacing: 12) {
-                Button {
-                    showOutputSettings = true
-                } label: {
-                    Label {
-                        Text(LocalizedStringKey("button.outputSettings"))
-                    } icon: {
-                        Image(systemName: "slider.horizontal.3")
-                            .symbolRenderingMode(.hierarchical)
+            // Output section
+            VStack(alignment: .leading, spacing: 12) {
+                Text(localizedString("label.output"))
+                    .font(.subheadline.bold())
+                    .foregroundStyle(.secondary)
+                
+                HStack(spacing: 12) {
+                    #if os(macOS)
+                    Button {
+                        chooseOutputFolder()
+                    } label: {
+                        Label {
+                            Text(outputFolder?.lastPathComponent ?? localizedString("button.chooseOutput"))
+                                .lineLimit(1)
+                                .truncationMode(.middle)
+                        } icon: {
+                            Image(systemName: "folder")
+                                .symbolRenderingMode(.hierarchical)
+                        }
+                        .frame(maxWidth: .infinity, minHeight: 38)
+                        .background(Color.secondary.opacity(0.1))
+                        .clipShape(Capsule())
+                        .overlay(
+                            Capsule()
+                                .stroke(Color.secondary.opacity(0.2), lineWidth: 0.5)
+                        )
                     }
-                    .frame(height: 38)
-                    .padding(.horizontal, 16)
-                    .background(Color.secondary.opacity(0.1))
-                    .clipShape(Capsule())
-                    .overlay(
-                        Capsule()
-                            .stroke(Color.secondary.opacity(0.2), lineWidth: 0.5)
-                    )
-                }
-                .buttonStyle(.plain)
-                .fixedSize()
-                .help(LocalizedStringKey("help.outputSettings"))
-                .disabled(isProcessing)
-
-                Button {
-                    chooseOutputFolder()
-                } label: {
+                    .buttonStyle(.plain)
+                    .overlay(alignment: .topTrailing) {
+                        if outputFolder == nil {
+                            Circle()
+                                .fill(Color.red)
+                                .frame(width: 10, height: 10)
+                                .overlay(Circle().stroke(Color.white, lineWidth: 1))
+                                .offset(x: 4, y: -4)
+                        }
+                    }
+                    .help(LocalizedStringKey("button.chooseOutput"))
+                    #else
                     Label {
-                        Text(outputFolder?.lastPathComponent ?? localizedString("button.chooseOutput"))
+                        Text("保存到相册 (Photos Library)")
                             .lineLimit(1)
                             .truncationMode(.middle)
+                            .foregroundStyle(.secondary)
                     } icon: {
-                        Image(systemName: "folder")
+                        Image(systemName: "photo.on.rectangle")
                             .symbolRenderingMode(.hierarchical)
                     }
-                    .frame(height: 38)
-                    .padding(.horizontal, 16)
+                    .frame(maxWidth: .infinity, minHeight: 38)
                     .background(Color.secondary.opacity(0.1))
                     .clipShape(Capsule())
-                    .overlay(
-                        Capsule()
-                            .stroke(Color.secondary.opacity(0.2), lineWidth: 0.5)
-                    )
+                    #endif
+                    
+                    Button {
+                        showOutputSettings = true
+                    } label: {
+                        Image(systemName: "slider.horizontal.3")
+                            .symbolRenderingMode(.hierarchical)
+                            .frame(width: 38, height: 38)
+                            .background(Color.secondary.opacity(0.1))
+                            .clipShape(Circle())
+                            .overlay(Circle().stroke(Color.secondary.opacity(0.2), lineWidth: 0.5))
+                    }
+                    .buttonStyle(.plain)
+                    .help(LocalizedStringKey("help.outputSettings"))
+                    .disabled(isProcessing)
                 }
-                .buttonStyle(.plain)
-                .fixedSize()
-                .overlay(alignment: .topTrailing) {
-                    if outputFolder == nil {
-                        Circle()
-                            .fill(Color.red)
-                            .frame(width: 10, height: 10)
-                            .overlay(Circle().stroke(Color.white, lineWidth: 1))
-                            .offset(x: 4, y: -4)
+                
+                HStack(spacing: 12) {
+                    Button {
+                        processImages()
+                    } label: {
+                        HStack(spacing: 8) {
+                            if showSuccessCheck {
+                                Image(systemName: "checkmark")
+                                    .font(.headline)
+                                    .transition(.scale.combined(with: .opacity))
+                            } else {
+                                Image(systemName: "play.fill")
+                                    .font(.headline)
+                                    .transition(.scale.combined(with: .opacity))
+                            }
+                            
+                            if isProcessing {
+                                ProgressView()
+                                    .controlSize(.small)
+                            } else {
+                                Text(showSuccessCheck ? localizedString("status.success") : localizedString("button.startProcess"))
+                                    .font(.headline)
+                            }
+                        }
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity, minHeight: 38)
+                        .background(showSuccessCheck ? Color.green : Color.accentColor)
+                        .clipShape(Capsule())
+                    }
+                    .buttonStyle(.plain)
+                    .disabled((imageURLs.isEmpty || outputFolder == nil || isProcessing) && !showSuccessCheck)
+                    .opacity(((imageURLs.isEmpty || outputFolder == nil || isProcessing) && !showSuccessCheck) ? 0.5 : 1)
+                    .help(localizedString("button.startProcess"))
+                    
+                    if !imageURLs.isEmpty {
+                        Button {
+                            withAnimation {
+                                clearAllImages()
+                            }
+                        } label: {
+                            Image(systemName: "trash")
+                                .font(.headline)
+                                .foregroundStyle(.red)
+                                .frame(width: 38, height: 38)
+                                .background(Color.red.opacity(0.1))
+                                .clipShape(Circle())
+                                .overlay(Circle().stroke(Color.red.opacity(0.2), lineWidth: 0.5))
+                        }
+                        .buttonStyle(.plain)
+                        .disabled(isProcessing)
+                        .help(LocalizedStringKey("button.clearAll"))
+                        .transition(.scale.combined(with: .opacity))
                     }
                 }
-                .help(LocalizedStringKey("button.chooseOutput"))
-
-                Button {
-                    processImages()
-                } label: {
-                    HStack(spacing: 8) {
-                        if showSuccessCheck {
-                            Image(systemName: "checkmark")
-                                .font(.headline)
-                                .transition(.scale.combined(with: .opacity))
-                        } else {
-                            Image(systemName: "play.fill")
-                                .font(.headline)
-                                .transition(.scale.combined(with: .opacity))
-                        }
-                        
-                        if isProcessing {
-                            ProgressView()
-                                .controlSize(.small)
-                        } else {
-                            Text(LocalizedStringKey("button.removeExif"))
-                                .font(.headline)
-                        }
-                    }
-                    .foregroundStyle(.white)
-                }
-                .frame(height: 38)
-                .padding(.horizontal, 24)
-                .background(showSuccessCheck ? Color.green : Color.accentColor)
-                .animation(.easeInOut(duration: 0.2), value: showSuccessCheck)
-                .clipShape(Capsule())
-                .buttonStyle(.plain)
-                .disabled((imageURLs.isEmpty || outputFolder == nil || isProcessing) && !showSuccessCheck)
-                .opacity(((imageURLs.isEmpty || outputFolder == nil || isProcessing) && !showSuccessCheck) ? 0.5 : 1)
             }
         }
-        .padding(.top, 12)
     }
 
     private var dropZone: some View {
+        #if os(macOS)
         RoundedRectangle(cornerRadius: 12)
             .fill(isTargeted || isHoveringDropZone ? Color.accentColor.opacity(0.15) : Color.secondary.opacity(0.05))
             .overlay(
                 ZStack {
                     RoundedRectangle(cornerRadius: 12)
                         .strokeBorder(style: StrokeStyle(lineWidth: 2, dash: [6]))
-                        .foregroundStyle(isTargeted ? Color.accentColor : (isHoveringDropZone ? Color.gray : Color.clear))
+                        .foregroundStyle(isTargeted ? Color.accentColor : (isHoveringDropZone ? Color.gray : Color.secondary.opacity(0.2)))
                     
-                    VStack(spacing: 8) {
+                    VStack(spacing: 12) {
                         Image(systemName: "photo.on.rectangle.angled")
-                            .font(.system(size: 32))
+                            .font(.system(size: 48))
                             .symbolRenderingMode(.hierarchical)
+                            .foregroundStyle(isTargeted || isHoveringDropZone ? Color.accentColor : Color.secondary)
                         Text(LocalizedStringKey("dropzone.title"))
-                            .font(.headline)
+                            .font(.title3)
+                            .bold()
                         Text(LocalizedStringKey("dropzone.subtitle"))
                             .foregroundStyle(.secondary)
                     }
                 }
             )
-            .frame(height: 180)
-            .onDrop(of: ["public.file-url"], isTargeted: $isTargeted) { providers in
-                handleDrop(providers: providers)
-            }
+            .frame(maxWidth: .infinity, maxHeight: 300)
             .onHover { hovering in
                 withAnimation(.easeInOut(duration: 0.2)) {
                     isHoveringDropZone = hovering
@@ -305,6 +350,73 @@ struct EXIFRemoverView: View {
             .onTapGesture {
                 chooseInputFiles()
             }
+        #else
+        VStack(spacing: 0) {
+            Button {
+                chooseInputFiles()
+            } label: {
+                VStack(spacing: 12) {
+                    Image(systemName: "photo.on.rectangle")
+                        .font(.system(size: 48))
+                        .foregroundStyle(Color.accentColor)
+                    Text(LocalizedStringKey("button.chooseImages"))
+                        .font(.title3)
+                        .bold()
+                        .foregroundStyle(Color.primary)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+
+            Divider()
+                .background(Color.primary.opacity(0.1))
+
+            Button {
+                loadFromClipboard()
+            } label: {
+                VStack(spacing: 12) {
+                    Image(systemName: "doc.on.clipboard")
+                        .font(.system(size: 48))
+                        .foregroundStyle(Color.secondary)
+                    Text(LocalizedStringKey("button.readClipboard"))
+                        .font(.title3)
+                        .bold()
+                        .foregroundStyle(Color.primary)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+        }
+        .frame(maxWidth: .infinity, maxHeight: horizontalSizeClass == .regular ? .infinity : 300)
+        .background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(.ultraThinMaterial)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 20)
+                .strokeBorder(Color.white.opacity(0.3), lineWidth: 1)
+        )
+        .shadow(color: Color.black.opacity(0.08), radius: 15, x: 0, y: 8)
+        .padding()
+        #endif
+    }
+    
+    private func loadFromClipboard() {
+        #if !os(macOS)
+        if UIPasteboard.general.hasImages {
+            if let images = UIPasteboard.general.images {
+                for image in images {
+                    if let data = image.jpegData(compressionQuality: 1.0) {
+                        let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".jpg")
+                        try? data.write(to: tempURL)
+                        imageURLs.append(tempURL)
+                    }
+                }
+            }
+        }
+        #endif
     }
 
     private var changelogBanner: some View {
@@ -375,12 +487,26 @@ struct EXIFRemoverView: View {
                 Spacer()
                 
                 Button {
+                    chooseInputFiles()
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: "plus")
+                        Text(localizedString("button.addFiles"))
+                    }
+                    .font(.subheadline)
+                    .foregroundStyle(Color.accentColor)
+                }
+                .buttonStyle(.plain)
+                .disabled(isProcessing)
+                .padding(.trailing, 12)
+                
+                Button {
                     clearAllImages()
                     statusMessage = nil
                 } label: {
                     HStack(spacing: 4) {
                         Image(systemName: "trash")
-                        Text(LocalizedStringKey("button.clearAll"))
+                        Text(localizedString("button.clearAll"))
                     }
                     .font(.subheadline)
                     .foregroundStyle(imageURLs.isEmpty ? Color.secondary.opacity(0.5) : Color.red)
@@ -425,20 +551,36 @@ struct EXIFRemoverView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
+#if os(macOS)
     private func handleDrop(providers: [NSItemProvider]) -> Bool {
         let group = DispatchGroup()
         var newURLs: [URL] = []
 
         for provider in providers {
-            guard provider.hasItemConformingToTypeIdentifier("public.file-url") else { continue }
             group.enter()
-            provider.loadItem(forTypeIdentifier: "public.file-url", options: nil) { item, _ in
-                defer { group.leave() }
-                if let data = item as? Data,
-                   let url = URL(dataRepresentation: data, relativeTo: nil),
-                   url.isFileURL {
-                    newURLs.append(url)
+            if provider.hasItemConformingToTypeIdentifier(UTType.fileURL.identifier) {
+                provider.loadItem(forTypeIdentifier: UTType.fileURL.identifier, options: nil) { item, _ in
+                    defer { group.leave() }
+                    if let data = item as? Data,
+                       let url = URL(dataRepresentation: data, relativeTo: nil),
+                       url.isFileURL {
+                        newURLs.append(url)
+                    } else if let url = item as? URL, url.isFileURL {
+                        newURLs.append(url)
+                    }
                 }
+            } else if provider.hasItemConformingToTypeIdentifier(UTType.image.identifier) {
+                provider.loadFileRepresentation(forTypeIdentifier: UTType.image.identifier) { url, error in
+                    defer { group.leave() }
+                    if let originalURL = url {
+                        let tempDir = FileManager.default.temporaryDirectory
+                        let destURL = tempDir.appendingPathComponent(UUID().uuidString + "_" + originalURL.lastPathComponent)
+                        try? FileManager.default.copyItem(at: originalURL, to: destURL)
+                        newURLs.append(destURL)
+                    }
+                }
+            } else {
+                group.leave()
             }
         }
 
@@ -476,6 +618,15 @@ struct EXIFRemoverView: View {
             }
         }
     }
+#else
+    private func chooseOutputFolder() {
+        showOutputFolderImporter = true
+    }
+
+    private func chooseInputFiles() {
+        isPhotoPickerPresented = true
+    }
+#endif
 
 
     private func handlePhotoSelection(items: [PhotosPickerItem]) {
@@ -549,24 +700,40 @@ struct EXIFRemoverView: View {
     }
 
     private func processImages() {
-        guard let outputFolder else { return }
+        #if os(macOS)
+        guard let outputFolder = outputFolder else { return }
+        #endif
         let urlsToProcess = imageURLs
         let configuration = outputConfiguration
         isProcessing = true
         statusMessage = localizedString("status.processing")
+        #if os(macOS)
+        let folder = outputFolder
+        #endif
 
-        Task.detached {
+        Task.detached(priority: .userInitiated) {
             var successCount = 0
             var failureCount = 0
             var skippedCount = 0
 
             for url in urlsToProcess {
                 do {
+                    #if os(macOS)
                     _ = try ImageStripper.stripMetadata(
                         inputURL: url,
-                        outputFolder: outputFolder,
+                        outputFolder: folder,
                         configuration: configuration
                     )
+                    #else
+                    let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".jpg")
+                    try ImageStripper.stripMetadata(inputURL: url, outputURL: tempURL)
+                    
+                    _ = await PHPhotoLibrary.requestAuthorization(for: .addOnly)
+                    try await PHPhotoLibrary.shared().performChanges {
+                        PHAssetCreationRequest.creationRequestForAssetFromImage(atFileURL: tempURL)
+                    }
+                    try? FileManager.default.removeItem(at: tempURL)
+                    #endif
                     successCount += 1
                 } catch ImageStripper.StripError.skippedByRule {
                     skippedCount += 1
@@ -625,7 +792,6 @@ struct EXIFRemoverView: View {
             noticeBanner = banner
             showNoticeBanner = shouldShowNoticeBanner(for: banner)
         } catch {
-        } catch {
         }
     }
 
@@ -668,6 +834,7 @@ struct EXIFRemoverView: View {
                     configuration: configuration
                 )
                 
+                #if os(macOS)
                 if let image = NSImage(contentsOf: outputURL) {
                     await MainActor.run {
                         let pb = NSPasteboard.general
@@ -680,6 +847,15 @@ struct EXIFRemoverView: View {
                         isProcessing = false
                     }
                 }
+                #else
+                if let image = UIImage(contentsOfFile: outputURL.path) {
+                    await MainActor.run {
+                        UIPasteboard.general.image = image
+                        statusMessage = localizedString("status.copiedToClipboard")
+                        isProcessing = false
+                    }
+                }
+                #endif
             } catch {
                 await MainActor.run {
                     statusMessage = localizedString("status.failed")
@@ -877,6 +1053,7 @@ private struct AppInfoView: View {
     }
 }
 
+#if os(macOS)
 private struct FullscreenDisabler: NSViewRepresentable {
     func makeNSView(context: Context) -> NSView {
         let view = NSView()
@@ -893,6 +1070,13 @@ private struct FullscreenDisabler: NSViewRepresentable {
 
     func updateNSView(_ nsView: NSView, context: Context) {}
 }
+#else
+private struct FullscreenDisabler: View {
+    var body: some View {
+        Color.clear
+    }
+}
+#endif
 
 struct OutputSettingsView: View {
     @Environment(\.dismiss) private var dismiss

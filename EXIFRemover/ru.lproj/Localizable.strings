@@ -1,0 +1,189 @@
+/* Application strings (Russian) */
+"app.title" = "WenRemover";
+"app.subtitle" = "Перетащите изображения ниже, выберите папку для вывода и нажмите «Удалить EXIF».";
+"tutorial.link" = "Руководство и помощь (Упрощенный китайский)";
+"help.about" = "О приложении";
+"menu.help" = "Помощь";
+
+"button.addFiles" = "Добавить";
+"menu.addFromFinder" = "Добавить из Finder";
+"button.addFromPhotos" = "Из Фото";
+"button.chooseOutput" = "Папка вывода";
+"button.removeExif" = "Удалить EXIF";
+"button.removing" = "Удаление…";
+"button.clearList" = "Очистить";
+"button.clearAll" = "Очистить";
+"button.removeOne" = "Удалить";
+"button.outputSettings" = "Настройки вывода";
+"button.cancel" = "Отмена";
+"button.saveChanges" = "Сохранить";
+"button.copyToClipboard" = "Копировать";
+"status.copiedToClipboard" = "Скопировано в буфер обмена";
+
+"output.none" = "Не выбрано";
+"dropzone.title" = "Перетащите или нажмите для добавления";
+"dropzone.subtitle" = "Поддерживаются файлы JPG / PNG / HEIC / TIFF";
+
+"selected.count %lld" = "Выбрано %lld";
+"status.noneSupported" = "Поддерживаемые изображения не найдены.";
+"status.added %lld" = "Добавлено %lld изображений.";
+"status.processing" = "Обработка…";
+"status.done %lld %lld" = "Готово: %lld успешно, %lld не удалось.";
+"status.doneDetailed %lld %lld %lld" = "Готово: %lld успешно, %lld не удалось, %lld пропущено.";
+
+"info.title" = "WenRemover";
+"info.subtitle" = "Утилита для работы с EXIF.";
+"info.supported" = "Поддерживает удаление EXIF, скрытие личных данных и просмотр EXIF.";
+"info.outputRule" = "2026 @ AndyWen.";
+
+"help.outputSettings" = "Настроить суффикс и правила конфликтов";
+"output.settingsTitle" = "Настройки вывода";
+"output.settingsDescription" = "Выберите правила именования файлов.";
+"output.suffixLabel" = "Суффикс файла";
+"output.suffixPlaceholder" = "Пример: _clean";
+"output.ruleLabel" = "Если файл уже существует";
+"output.rule.appendIndex" = "Добавить индекс";
+"output.rule.appendIndex.desc" = "Добавляет _1, _2… во избежание конфликтов.";
+"output.rule.overwrite" = "Перезаписать файл";
+"output.rule.overwrite.desc" = "Удалить старый файл и сохранить новый.";
+"output.rule.skip" = "Пропустить файл";
+"output.rule.skip.desc" = "Сохранить старый файл и отметить как пропущенный.";
+
+"changelog.title" = "Обновление v1.6.27";
+"changelog.body" = "• Добавлен «Скрытие данных» (Beta) с автоопределением и ручным выделением.\n• Улучшен интерфейс и добавлены анимации.\n• Добавлен «Просмотр EXIF» для чтения метаданных.\n• Улучшен английский перевод.\n• При первом запуске WenRemover запросит доступ к папке «Загрузки» для быстрого сохранения. Вы можете изменить это в настройках.";
+"changelog.dismiss" = "Закрыть";
+"privacy.beta.title" = "Скрытие данных (Beta)";
+"privacy.beta.body" = "Это бета-версия. Все распознавания происходят на вашем устройстве.\nЕсли что-то не было найдено, вы можете нажать на выделенные зоны, чтобы убрать их, или использовать ручное выделение.";
+"privacy.beta.dismiss" = "Закрыть";
+
+"notice.defaultTitle" = "Объявление";
+"notice.dismiss" = "Закрыть";
+"notice.action" = "Подробнее";
+
+"settings.network.section" = "Сеть";
+"settings.notice.disable" = "Отключить уведомления";
+"settings.notice.disable.note" = "Перестать показывать объявления и специальные уведомления.";
+"settings.general.section" = "Общие";
+"settings.dev.section" = "Разработчик";
+"settings.dev.options" = "Опции";
+"settings.dev.alwaysShowChangelog" = "Всегда показывать подсказки";
+"settings.dev.alwaysShowChangelog.note" = "Всегда показывать историю обновлений и подсказки при первом запуске.";
+"settings.notice.reset" = "Сбросить подсказки";
+"settings.notice.reset.note" = "Восстановить подсказки для всех страниц.";
+"settings.output.section" = "Настройки вывода";
+"settings.output.reset" = "Сбросить настройки вывода";
+"settings.output.reset.note" = "Вернуть настройки по умолчанию. Для изменения перейдите на главную → Настройки вывода.";
+"settings.appearance.section" = "Внешний вид";
+"settings.appearance.header" = "Внешний вид";
+"settings.appearance.footer" = "Выберите тему приложения.";
+"appearance.light" = "Светлая";
+"appearance.dark" = "Тёмная";
+"appearance.system" = "Системная";
+"appearance.theme" = "Настройки темы";
+
+"settings.language.section" = "Язык";
+"settings.language.label" = "Язык приложения";
+"settings.language.system" = "По умолчанию";
+"settings.language.english" = "English";
+"settings.language.chinese" = "简体中文";
+"settings.language.chinese_traditional" = "繁体中文";
+"settings.language.japanese" = "日本語";
+"settings.language.russian" = "Русский";
+
+"settings.language.helper.text" = "Помогите нам улучшить документацию и перевод.";
+"settings.language.helper.linkText" = "Узнать больше";
+"settings.language.helper.url" = "https://wenlei.top/wenremover-feedback";
+
+"settings.window.title" = "Настройки WenRemover";
+
+"panel.choose" = "Выбрать";
+"panel.add" = "Добавить";
+
+"error.invalidImage" = "Не удалось прочитать изображение.";
+"error.cannotCreateDestination" = "Не удалось создать файл вывода. (Ошибка 1)";
+"error.cannotWrite" = "Ошибка записи.";
+"error.skippedByRule" = "Файл уже существует, настроено пропускать.";
+
+"tab.exif" = "Очистка EXIF";
+"tab.privacy" = "Скрытие данных";
+"privacy.title" = "Скрытие данных (BETA)";
+"privacy.subtitle" = "Автоопределение и скрытие лиц, текста и QR-кодов.";
+"privacy.status.loaded" = "Изображение загружено.";
+"privacy.status.detecting" = "Поиск приватных областей...";
+"privacy.status.noRegions" = "Приватные области не найдены.";
+"privacy.status.review %lld" = "Найдено %lld областей. Пожалуйста, проверьте.";
+"privacy.status.items %lld" = "%lld изображений в очереди. Пожалуйста, проверьте.";
+"privacy.status.rendering" = "Применение фильтров...";
+"privacy.status.exported" = "Успешно экспортировано.";
+"privacy.intensity.light" = "Слабое";
+"privacy.intensity.medium" = "Среднее";
+"privacy.intensity.heavy" = "Сильное";
+"privacy.intensity.label" = "Интенсивность";
+"privacy.button.drawMode" = "Рисовать";
+"privacy.button.detect" = "Распознать";
+"privacy.button.export" = "Скрыть и экспортировать";
+"privacy.button.exportAll" = "Скрыть и экспортировать";
+
+"permission.alert.title" = "Требуется доступ к папке";
+"permission.alert.message" = "Вы запретили доступ к папке загрузок. Выберите папку вручную или разрешите доступ в системных настройках.";
+"permission.alert.button" = "ОК";
+
+"settings.permission.section" = "Разрешения";
+"settings.permission.manage" = "Управление доступом";
+"settings.permission.note" = "Разрешите или отмените доступ к файлам в системных настройках.";
+
+"button.info" = "Инфо";
+"exif.info.title" = "Информация об изображении";
+"exif.make" = "Производитель";
+"exif.model" = "Модель камеры";
+"exif.lens" = "Модель объектива";
+"exif.datetime" = "Дата и время";
+"exif.focalLength" = "Фокусное расстояние";
+"exif.colorProfile" = "Цветовой профиль";
+"exif.colorDepth" = "Глубина цвета";
+"exif.aperture" = "Диафрагма";
+"exif.exposureTime" = "Время экспозиции";
+"exif.iso" = "ISO";
+"exif.location" = "Локация";
+"exif.noLocation" = "Нет GPS";
+
+"tab.exifViewer" = "Просмотр EXIF";
+"exifviewer.subtitle" = "Просмотр метаданных и места съемки.";
+"button.nextImage" = "Следующее";
+
+"settings.appearance.glassmorphism" = "Стеклянный фон";
+
+/* EXIF Editor */
+"tab.exifEditor" = "Редактор EXIF";
+"editor.filter.make" = "Фильтр: Производитель";
+"editor.filter.model" = "Фильтр: Модель";
+"editor.selectFile" = "Выберите файл из списка";
+"editor.basic" = "Основная информация";
+"editor.make" = "Производитель";
+"editor.model" = "Модель";
+"editor.date" = "Дата съемки";
+"editor.artist" = "Автор";
+"editor.copyright" = "Авторские права";
+"editor.gps" = "Локация GPS";
+"button.export" = "Экспорт";
+"gps.setPinAtCenter" = "Установить булавку в центр";
+"button.remove" = "Удалить";
+"editor.mode.view" = "Просмотр";
+"editor.mode.edit" = "Редактирование";
+"button.copyEXIF" = "Копировать все EXIF";
+"editor.unknown" = "Неизвестно";
+"editor.status.saved" = "Сохранено в %1$@";
+"editor.status.failed" = "Ошибка сохранения: %1$@";
+"editor.batch.rename" = "Пакетное переименование";
+"editor.batch.renameFormat" = "Формат (например, {Year}-{Make})";
+"editor.batch.renameAndExport" = "Переименовать и экспортировать";
+"editor.batch.varsDescription" = "Доступные переменные: {Year}, {Month}, {Day}, {Camera}, {Model}";
+"editor.batch.timeShift" = "Пакетный сдвиг времени";
+"editor.batch.hoursToShift" = "Сдвиг в часах:";
+"editor.batch.applyShift" = "Применить сдвиг";
+"editor.status.batchRenameCompleted" = "Пакетное переименование завершено";
+"editor.status.batchExportCompleted" = "Пакетный экспорт завершен";
+"button.startProcess" = "Начать обработку";
+"label.input" = "Входные";
+"label.output" = "Выходные";
+"label.tools" = "Инструменты";
